@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>JudyAI | New Case</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Hanken+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error":"#ffffff","on-primary":"#ffffff","surface":"#fff9ef",
+                        "primary-fixed":"#dce1ff","secondary":"#b71619","surface-container":"#f3ede4",
+                        "surface-variant":"#e8e2d9","outline-variant":"#c6c6cf",
+                        "surface-container-high":"#ede7de","background":"#fff9ef",
+                        "on-surface-variant":"#45464e","on-secondary":"#ffffff",
+                        "surface-container-low":"#f9f3ea","on-surface":"#1d1b16",
+                        "primary":"#162043","primary-container":"#2c365a",
+                        "secondary-container":"#da332f","outline":"#76767f",
+                        "surface":"#fff9ef","inverse-on-surface":"#f6f0e7"
+                    },
+                    "fontFamily": {
+                        "body-lg":["Hanken Grotesk"],"label-technical":["JetBrains Mono"],
+                        "label-bold":["Hanken Grotesk"],"headline-lg":["Libre Caslon Text"],
+                        "display-xl":["Libre Caslon Text"],"headline-md":["Libre Caslon Text"],
+                        "body-md":["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+                        "label-technical":["11px",{"lineHeight":"15px","fontWeight":"500"}],
+                        "label-bold":["13px",{"lineHeight":"17px","letterSpacing":"0.08em","fontWeight":"700"}],
+                        "headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],
+                        "display-xl":["52px",{"lineHeight":"58px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                        "headline-md":["22px",{"lineHeight":"30px","fontWeight":"400"}],
+                        "body-md":["14px",{"lineHeight":"21px","fontWeight":"400"}]
+                    },
+                    "spacing": {
+                        "gutter":"24px","border-thick":"3px","margin-desktop":"64px","border-thin":"1px"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
+            height: 100%; margin: 0; padding: 0;
+            background-color: #fff9ef;
+            color: #1d1b16;
+            overflow: hidden; /* full-height layout, no page scroll */
+        }
+
+        .grain-overlay {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9999; opacity: 0.05;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .brutalist-border  { border: 3px solid #162043; }
+        .brutalist-shadow  { box-shadow: 6px 6px 0 0 #162043; }
+        .brutalist-shadow-hover:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 0 #162043; }
+
+        /* ── Sidebar ── */
+        #sidebar { transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); }
+        #sidebar.sidebar-closed { transform: translateX(-100%); }
+        #sidebar-backdrop { transition: opacity 0.28s ease; }
+
+        .sidebar-nav-btn {
+            display: flex; align-items: center;
+            width: 100%; padding: 14px 20px;
+            border-left: 3px solid transparent;
+            border-bottom: 1px solid #c6c6cf;
+            transition: background 0.07s, border-color 0.07s;
+            cursor: pointer; background: transparent;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 13px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: #162043;
+        }
+        .sidebar-nav-btn:hover { background: #e8e2d9; }
+        .sidebar-nav-btn.active {
+            background: #e8e2d9;
+            border-left-color: #b71619;
+        }
+        .sidebar-nav-btn .material-symbols-outlined { font-size: 20px; margin-right: 12px; }
+
+        /* ── Main layout ── */
+        #app {
+            display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden;
+        }
+
+        /* ── Topbar ── */
+        #topbar {
+            display: flex; align-items: center; gap: 16px;
+            padding: 18px 28px;
+            border-bottom: 3px solid #162043;
+            background: #fff9ef;
+            flex-shrink: 0;
+            z-index: 30;
+        }
+
+        /* ── Content area ── */
+        #content-area {
+            flex: 1; display: flex; flex-direction: column;
+            overflow: hidden; position: relative;
+        }
+
+        /* Welcome state */
+        #welcome-state {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 40px 24px; text-align: center;
+            transition: opacity 0.3s ease;
+        }
+        #welcome-state.hidden-state {
+            display: none;
+        }
+
+        /* Chat messages */
+        #chat-messages {
+            flex: 1; overflow-y: auto;
+            padding: 32px 24px; display: none;
+            flex-direction: column; gap: 24px;
+            scroll-behavior: smooth;
+        }
+        #chat-messages.visible { display: flex; }
+
+        /* Panels (files, reports) */
+        .tab-panel { flex: 1; overflow-y: auto; padding: 40px 32px; display: none; }
+        .tab-panel.visible { display: block; }
+
+        /* Input bar */
+        #input-bar {
+            flex-shrink: 0;
+            border-top: 3px solid #162043;
+            padding: 16px 24px 20px;
+            background: #fff9ef;
+        }
+        #chat-input {
+            resize: none; overflow-y: hidden;
+            min-height: 44px; max-height: 160px;
+            width: 100%; outline: none;
+            background: #f9f3ea;
+            border: 3px solid #162043;
+            padding: 10px 16px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 14px; line-height: 21px;
+            color: #1d1b16;
+        }
+        #chat-input::placeholder { color: #76767f; }
+
+        /* Chat bubbles */
+        .bubble-wrap-user  { display: flex; justify-content: flex-end; gap: 12px; }
+        .bubble-wrap-ai    { display: flex; justify-content: flex-start; gap: 12px; }
+        .bubble-avatar {
+            width: 32px; height: 32px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .bubble-avatar-ai  { background: #162043; }
+        .bubble-avatar-usr { background: #b71619; }
+
+        .bubble {
+            max-width: 60%; padding: 14px 18px;
+            border: 3px solid #162043;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 14px; line-height: 21px;
+        }
+        .bubble-ai  { background: #f3ede4; color: #1d1b16; }
+        .bubble-usr { background: #162043; color: #fff9ef; }
+
+        .bubble-sender {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            color: #b71619; margin-bottom: 4px; display: block;
+        }
+
+        /* Typing indicator */
+        @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+        .dot { width:6px; height:6px; border-radius:50%; background:#162043; animation:pulse 1.2s infinite; }
+        .dot:nth-child(2){ animation-delay:0.2s; }
+        .dot:nth-child(3){ animation-delay:0.4s; }
+    </style>
+</head>
+<body class="font-body-md">
+<div class="grain-overlay"></div>
+
+<!-- ── Sidebar backdrop ── -->
+<div id="sidebar-backdrop" class="fixed inset-0 bg-primary/30 z-40 hidden opacity-0"></div>
+
+<!-- ── Sidebar ── -->
+<nav id="sidebar" class="sidebar-closed fixed left-0 top-0 h-full flex flex-col z-50 bg-surface-container w-64" style="border-right:3px solid #162043;">
+
+    <!-- Header -->
+    <div style="padding:20px; border-bottom:3px solid #162043; display:flex; align-items:flex-start; justify-content:space-between; flex-shrink:0;">
+        <div>
+            <p class="font-label-technical text-label-technical text-secondary uppercase" style="color:#b71619;">Active Case</p>
+            <h2 id="sidebar-case-title" class="font-label-bold text-label-bold text-primary uppercase mt-1" style="max-width:170px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">—</h2>
+        </div>
+        <button id="sidebar-close" style="color:#162043; background:none; border:none; cursor:pointer; padding:2px;">
+            <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+    </div>
+
+    <!-- Nav items -->
+    <div style="flex:1; overflow-y:auto; padding-top:8px;">
+        <button class="sidebar-nav-btn active" data-tab="chat">
+            <span class="material-symbols-outlined">chat</span>
+            Current Chat
+        </button>
+        <button class="sidebar-nav-btn" data-tab="files">
+            <span class="material-symbols-outlined">folder_open</span>
+            Case Files
+        </button>
+        <button class="sidebar-nav-btn" data-tab="reports">
+            <span class="material-symbols-outlined">description</span>
+            Reports Generated
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:16px; border-top:3px solid #162043; flex-shrink:0;">
+        <a href="code.html" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:#45464e; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em;">
+            <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
+            Back to Home
+        </a>
+    </div>
+</nav>
+
+<!-- ── App shell ── -->
+<div id="app">
+
+    <!-- Minimal top bar -->
+    <div id="topbar">
+        <button id="menu-toggle" style="background:none;border:none;cursor:pointer;color:#162043;display:flex;align-items:center;" title="Toggle sidebar">
+            <span class="material-symbols-outlined" style="font-size:28px;">menu</span>
+        </button>
+        <span class="font-headline-lg text-headline-lg font-bold text-primary uppercase tracking-tighter" style="font-size:24px;line-height:1;font-family:'Libre Caslon Text',serif;font-weight:700;color:#162043;letter-spacing:-0.03em;">JudyAI</span>
+    </div>
+
+    <!-- Content area -->
+    <div id="content-area">
+
+        <!-- Welcome state -->
+        <div id="welcome-state">
+            <h1 class="font-display-xl text-display-xl text-primary uppercase" style="margin-bottom:12px;color:#162043;font-family:'Libre Caslon Text',serif;font-size:clamp(36px,6vw,64px);font-weight:700;letter-spacing:-0.02em;">JUDYAI</h1>
+            <p class="font-body-lg text-body-lg" style="color:#45464e;max-width:480px;margin-bottom:8px;">The definitive intelligence for legal strategy and case law analysis.</p>
+            <p class="font-label-technical text-label-technical" style="color:#b71619;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0;" id="welcome-case-name"></p>
+        </div>
+
+        <!-- Chat messages (hidden until first message) -->
+        <div id="chat-messages"></div>
+
+        <!-- Case Files panel -->
+        <div class="tab-panel" id="tab-files">
+            <h2 class="font-headline-md text-headline-md text-primary uppercase" style="border-bottom:3px solid #162043;padding-bottom:16px;margin-bottom:32px;">Case Files</h2>
+            <div id="case-files-list" style="display:flex;flex-direction:column;gap:12px;max-width:760px;"></div>
+        </div>
+
+        <!-- Reports Generated panel -->
+        <div class="tab-panel" id="tab-reports">
+            <h2 class="font-headline-md text-headline-md text-primary uppercase" style="border-bottom:3px solid #162043;padding-bottom:16px;margin-bottom:32px;">Reports Generated</h2>
+            <div id="analysis-report" style="max-width:880px;display:flex;flex-direction:column;gap:18px;"></div>
+        </div>
+    </div>
+
+    <!-- Input bar (always visible) -->
+    <div id="input-bar">
+        <div style="max-width:720px; margin:0 auto; display:flex; gap:12px; align-items:flex-end;">
+            <textarea id="chat-input" rows="1" placeholder="Describe your legal query…"></textarea>
+            <button id="send-btn" class="brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold text-label-bold uppercase"
+                style="flex-shrink:0;background:#b71619;color:#fff;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;border-color:#162043;">
+                <span class="material-symbols-outlined" style="font-size:18px;">send</span>Send
+            </button>
+        </div>
+        <p class="font-label-technical text-label-technical" style="text-align:center;margin-top:10px;color:#76767f;">JudyAI may produce inaccurate information. Always verify with a qualified attorney.</p>
+    </div>
+</div>
+
+<script>
+    const API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:5000' : window.location.origin;
+    const STORAGE_KEY = 'judyai_active_case';
+    let activeCase = null;
+    try { activeCase = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch {}
+
+    const sidebar  = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const chatInput  = document.getElementById('chat-input');
+    const sendBtn    = document.getElementById('send-btn');
+    const chatMsgs   = document.getElementById('chat-messages');
+    const welcomeDiv = document.getElementById('welcome-state');
+    let activeTab = 'chat';
+
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, ch => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[ch]));
+    }
+
+    // ── Full Markdown Renderer ────────────────────────────────────────────
+    function renderMarkdown(raw) {
+        if (!raw) return '';
+        const lines = String(raw).split('\n');
+        const out = [];
+        let inOl = false, inUl = false;
+
+        function closeList() {
+            if (inOl) { out.push('</ol>'); inOl = false; }
+            if (inUl) { out.push('</ul>'); inUl = false; }
+        }
+
+        function inlineFormat(text) {
+            return text
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/`(.+?)`/g, '<code style="background:#e8e2d9;padding:1px 5px;font-family:\'JetBrains Mono\',monospace;font-size:12px;">$1</code>')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color:#b71619;text-decoration:underline;">$1</a>')
+                .replace(/\[UNCERTAIN\]/g, '<span style="color:#b71619;font-family:\'JetBrains Mono\',monospace;font-size:11px;">[UNCERTAIN]</span>');
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const trimmed = line.trim();
+
+            // Horizontal rule
+            if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+                closeList();
+                out.push('<hr style="border:none;border-top:1px solid #c6c6cf;margin:12px 0;">');
+                continue;
+            }
+            // H2
+            if (trimmed.startsWith('## ')) {
+                closeList();
+                const text = inlineFormat(trimmed.slice(3));
+                out.push(`<h3 style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#162043;margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #162043;">${text}</h3>`);
+                continue;
+            }
+            // H3
+            if (trimmed.startsWith('### ')) {
+                closeList();
+                const text = inlineFormat(trimmed.slice(4));
+                out.push(`<h4 style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#45464e;margin:14px 0 6px;">${text}</h4>`);
+                continue;
+            }
+            // H1
+            if (trimmed.startsWith('# ')) {
+                closeList();
+                const text = inlineFormat(trimmed.slice(2));
+                out.push(`<h2 style="font-family:'Libre Caslon Text',serif;font-size:18px;font-weight:700;color:#162043;margin:20px 0 10px;">${text}</h2>`);
+                continue;
+            }
+            // Blockquote
+            if (trimmed.startsWith('> ')) {
+                closeList();
+                out.push(`<blockquote style="border-left:3px solid #b71619;margin:8px 0;padding:6px 12px;background:#fff3f3;color:#45464e;font-style:italic;">${inlineFormat(trimmed.slice(2))}</blockquote>`);
+                continue;
+            }
+            // Ordered list
+            const olMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+            if (olMatch) {
+                if (!inOl) { closeList(); out.push('<ol style="margin:6px 0 6px 20px;padding:0;list-style:decimal;">'); inOl = true; }
+                out.push(`<li style="margin:4px 0;line-height:1.6;">${inlineFormat(olMatch[2])}</li>`);
+                continue;
+            }
+            // Unordered list
+            if (/^[-*+]\s+/.test(trimmed)) {
+                if (!inUl) { closeList(); out.push('<ul style="margin:6px 0 6px 20px;padding:0;list-style:disc;">'); inUl = true; }
+                out.push(`<li style="margin:4px 0;line-height:1.6;">${inlineFormat(trimmed.replace(/^[-*+]\s+/, ''))}</li>`);
+                continue;
+            }
+            // Empty line
+            if (!trimmed) {
+                closeList();
+                out.push('<br>');
+                continue;
+            }
+            // Normal paragraph line
+            closeList();
+            out.push(`<span style="line-height:1.65;display:block;margin:2px 0;">${inlineFormat(trimmed)}</span>`);
+        }
+        closeList();
+        return out.join('\n');
+    }
+
+    function bytesToSize(bytes) {
+        if (!bytes) return '0 KB';
+        const units = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+        return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+    }
+
+    function openSidebar() {
+        sidebar.classList.remove('sidebar-closed');
+        backdrop.classList.remove('hidden');
+        requestAnimationFrame(() => backdrop.classList.remove('opacity-0'));
+    }
+    function closeSidebar() {
+        sidebar.classList.add('sidebar-closed');
+        backdrop.classList.add('opacity-0');
+        setTimeout(() => backdrop.classList.add('hidden'), 280);
+    }
+
+    document.getElementById('menu-toggle').addEventListener('click', openSidebar);
+    document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+    backdrop.addEventListener('click', closeSidebar);
+
+    function switchTab(tab) {
+        activeTab = tab;
+        document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+        const filesPanel = document.getElementById('tab-files');
+        const reportsPanel = document.getElementById('tab-reports');
+        filesPanel.classList.remove('visible');
+        reportsPanel.classList.remove('visible');
+
+        if (tab === 'chat') {
+            const hasMsgs = chatMsgs.children.length > 0;
+            welcomeDiv.classList.toggle('hidden-state', hasMsgs);
+            chatMsgs.classList.toggle('visible', hasMsgs);
+        } else if (tab === 'files') {
+            welcomeDiv.classList.add('hidden-state');
+            chatMsgs.classList.remove('visible');
+            filesPanel.classList.add('visible');
+        } else if (tab === 'reports') {
+            welcomeDiv.classList.add('hidden-state');
+            chatMsgs.classList.remove('visible');
+            reportsPanel.classList.add('visible');
+        }
+        closeSidebar();
+    }
+
+    document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    function appendBubble(html) {
+        chatMsgs.insertAdjacentHTML('beforeend', html);
+        chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    }
+
+    function renderCaseHeader() {
+        const title = activeCase ? activeCase.title : 'No active case';
+        document.getElementById('sidebar-case-title').textContent = title;
+        document.getElementById('welcome-case-name').textContent = title;
+        document.title = `JudyAI | ${title}`;
+    }
+
+    function renderFiles() {
+        const list = document.getElementById('case-files-list');
+        const files = (activeCase && activeCase.files) || [];
+        if (!files.length) {
+            list.innerHTML = `<div class="brutalist-border" style="padding:32px;background:#f9f3ea;">No files are attached to this case.</div>`;
+            return;
+        }
+        list.innerHTML = files.map(f => `
+            <div class="brutalist-border" style="background:#fff9ef;padding:16px 18px;display:flex;align-items:center;gap:14px;">
+                <span class="material-symbols-outlined" style="color:#b71619;">picture_as_pdf</span>
+                <div style="flex:1;min-width:0;">
+                    <div class="font-label-bold text-label-bold text-primary uppercase" style="overflow:hidden;text-overflow:ellipsis;">${escapeHtml(f.name)}</div>
+                    <div class="font-label-technical text-label-technical" style="color:#76767f;">${bytesToSize(f.size)} · ${f.pages || 0} pages · ${f.chunks || 0} RAG chunks</div>
+                </div>
+            </div>`).join('');
+    }
+
+    function renderLeadLinks(leads) {
+        if (!leads || !leads.length) return '<p>No legal web leads returned yet.</p>';
+        return leads.map(item => `
+            <div style="border-top:1px solid #c6c6cf;padding-top:12px;">
+                ${item.unavailable || !item.url
+                    ? `<span class="font-label-bold text-label-bold text-primary uppercase">${escapeHtml(item.title)}</span>`
+                    : `<a class="font-label-bold text-label-bold text-primary uppercase" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">${escapeHtml(item.title)}</a>`}
+                <p class="font-body-md text-body-md" style="color:#45464e;margin-top:4px;">${escapeHtml(item.snippet)}</p>
+            </div>`).join('');
+    }
+
+    function renderInventory(inventory) {
+        const items = (inventory && inventory.items) || [];
+        if (!items.length) return '<p>No exhibit or document labels were detected in the extracted text.</p>';
+        const missing = inventory.missing_expected_exhibits_a_to_h || [];
+        return `
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                ${items.map(item => `
+                    <div style="display:flex;justify-content:space-between;gap:12px;border-top:1px solid #c6c6cf;padding-top:8px;">
+                        <span class="font-label-bold text-label-bold text-primary uppercase">${escapeHtml(item.label)}</span>
+                        <span class="font-label-technical text-label-technical" style="color:#76767f;">${escapeHtml(item.type)} · pages ${(item.pages || []).join(', ')}</span>
+                    </div>`).join('')}
+                ${missing.length ? `<p class="font-label-technical text-label-technical" style="color:#b71619;margin-top:8px;">Missing expected A-H labels: ${missing.map(escapeHtml).join(', ')}</p>` : ''}
+            </div>`;
+    }
+
+    function renderRetrievalDebug(debug) {
+        if (!debug) return '<p>No retrieval debug trace is available yet.</p>';
+        return `
+            <p class="font-body-md text-body-md" style="color:#45464e;">Selected ${debug.selected_chunk_count || 0} of ${debug.total_chunks_indexed || 0} chunks. Pages: ${(debug.selected_pages || []).join(', ') || 'none'}.</p>
+            <p class="font-body-md text-body-md" style="color:#45464e;margin-top:6px;">Exhibits in context: ${(debug.selected_exhibit_labels || []).join(', ') || 'none detected'}.</p>
+            ${(debug.missing_indexed_exhibit_labels || []).length ? `<p class="font-label-technical text-label-technical" style="color:#b71619;margin-top:6px;">Indexed but not selected: ${debug.missing_indexed_exhibit_labels.map(escapeHtml).join(', ')}</p>` : ''}
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+                ${(debug.selected_chunks || []).slice(0, 12).map(chunk => `
+                    <div style="border-top:1px solid #c6c6cf;padding-top:8px;">
+                        <div class="font-label-technical text-label-technical" style="color:#76767f;">${escapeHtml(chunk.reason)} · p.${escapeHtml(chunk.page)} · ${escapeHtml((chunk.exhibit_labels || []).join(', '))}</div>
+                        <div class="font-body-md text-body-md" style="color:#45464e;">${escapeHtml(chunk.preview)}</div>
+                    </div>`).join('')}
+            </div>`;
+    }
+
+    // ── Section Card Builder ─────────────────────────────────────────────
+    const SECTION_CONFIG = [
+        {
+            heading: 'Executive Summary',
+            icon: 'gavel',
+            accentColor: '#162043',
+            bgColor: '#fff9ef',
+            description: 'Overview of the case'
+        },
+        {
+            heading: 'Key Statutory Sections & Case Law',
+            icon: 'menu_book',
+            accentColor: '#162043',
+            bgColor: '#f9f3ea',
+            description: 'Relevant statutes and precedents'
+        },
+        {
+            heading: 'Legal Web Leads',
+            icon: 'travel_explore',
+            accentColor: '#45464e',
+            bgColor: '#f3ede4',
+            description: 'External legal sources'
+        },
+        {
+            heading: 'Contradictions & Inconsistencies',
+            icon: 'warning',
+            accentColor: '#b71619',
+            bgColor: '#fff8f8',
+            description: 'Discrepancies found in case documents'
+        },
+        {
+            heading: 'Missing Facts & Evidence Gaps',
+            icon: 'search_off',
+            accentColor: '#765a00',
+            bgColor: '#fffbea',
+            description: 'Absent or incomplete information'
+        },
+        {
+            heading: 'Strategic Insights & Next Steps',
+            icon: 'lightbulb',
+            accentColor: '#1a5c2a',
+            bgColor: '#f0fff4',
+            description: 'Actionable legal strategy'
+        },
+        // legacy headings from fallback
+        {
+            heading: 'Useful Sections',
+            icon: 'menu_book',
+            accentColor: '#162043',
+            bgColor: '#f9f3ea',
+            description: 'Relevant sections'
+        },
+        {
+            heading: 'Inconsistencies or Missing Facts',
+            icon: 'warning',
+            accentColor: '#b71619',
+            bgColor: '#fff8f8',
+            description: 'Issues found'
+        },
+        {
+            heading: 'Next Questions',
+            icon: 'lightbulb',
+            accentColor: '#1a5c2a',
+            bgColor: '#f0fff4',
+            description: 'Follow-up actions'
+        },
+    ];
+
+    function getSectionConfig(heading) {
+        return SECTION_CONFIG.find(s =>
+            heading.toLowerCase().includes(s.heading.toLowerCase().split(' ')[0]) &&
+            heading.toLowerCase().includes(s.heading.toLowerCase().split(' ').pop())
+        ) || { icon: 'article', accentColor: '#162043', bgColor: '#f9f3ea', description: '' };
+    }
+
+    function parseMarkdownSections(markdown) {
+        if (!markdown) return [];
+        const sections = [];
+        const lines = markdown.split('\n');
+        let current = null;
+        for (const line of lines) {
+            const h2 = line.match(/^##\s+(.+)$/);
+            if (h2) {
+                if (current) sections.push(current);
+                current = { heading: h2[1].trim(), body: [] };
+            } else if (current) {
+                current.body.push(line);
+            } else {
+                // text before first heading
+                if (!current) current = { heading: '', body: [] };
+                current.body.push(line);
+            }
+        }
+        if (current) sections.push(current);
+        return sections.filter(s => s.body.join('').trim());
+    }
+
+    function countContradictions(bodyText) {
+        const matches = bodyText.match(/^\d+\./gm);
+        return matches ? matches.length : 0;
+    }
+
+    function renderSectionCard(section) {
+        const cfg = getSectionConfig(section.heading);
+        const bodyText = section.body.join('\n').trim();
+        const isContradictions = section.heading.toLowerCase().includes('contradiction') ||
+                                  section.heading.toLowerCase().includes('inconsistenc');
+        const count = isContradictions ? countContradictions(bodyText) : 0;
+
+        return `
+            <div style="border:3px solid ${cfg.accentColor};background:${cfg.bgColor};overflow:hidden;margin-bottom:0;">
+                <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:${cfg.accentColor};">
+                    <span class="material-symbols-outlined" style="font-size:18px;color:#fff;flex-shrink:0;">${cfg.icon}</span>
+                    <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fff;flex:1;">${escapeHtml(section.heading || 'Analysis')}</span>
+                    ${count > 0 ? `<span style="background:#fff;color:${cfg.accentColor};font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:2px 8px;">${count} FOUND</span>` : ''}
+                </div>
+                <div style="padding:16px 18px;font-family:'Hanken Grotesk',sans-serif;font-size:14px;line-height:1.65;color:#1d1b16;">
+                    ${renderMarkdown(bodyText)}
+                </div>
+            </div>`;
+    }
+
+    function renderReport() {
+        const panel = document.getElementById('analysis-report');
+        const analysis = activeCase && activeCase.analysis;
+        if (!analysis) {
+            panel.innerHTML = `<div class="brutalist-border" style="padding:32px;background:#f9f3ea;">No analysis report is available for this case.</div>`;
+            return;
+        }
+
+        const sections = parseMarkdownSections(analysis.summary || '');
+        const citations = (analysis.citations || []).map(c => `${escapeHtml(c.file)} p.${escapeHtml(String(c.page))}`).join(' &middot; ') || 'No PDF citations returned.';
+
+        // Build section cards
+        const sectionHTML = sections.length
+            ? sections.map(renderSectionCard).join('')
+            : `<div class="brutalist-border" style="padding:22px;background:#fff9ef;">${renderMarkdown(analysis.summary || '')}</div>`;
+
+        panel.innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                ${sectionHTML}
+                <div style="border:3px solid #162043;background:#f3ede4;overflow:hidden;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:#162043;">
+                        <span class="material-symbols-outlined" style="font-size:18px;color:#fff;">source</span>
+                        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fff;">PDF Citations Used</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.7);margin-left:auto;">${(analysis.citations || []).length} chunks</span>
+                    </div>
+                    <div style="padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#45464e;line-height:1.8;">${citations}</div>
+                </div>
+                <div style="border:3px solid #162043;background:#f9f3ea;overflow:hidden;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:#162043;">
+                        <span class="material-symbols-outlined" style="font-size:18px;color:#fff;">travel_explore</span>
+                        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fff;">Legal Web Leads</span>
+                    </div>
+                    <div style="padding:14px 18px;">
+                        ${renderLeadLinks(analysis.legal_leads || analysis.indian_kanoon)}
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    async function refreshCase() {
+        if (!activeCase || !activeCase.id) return;
+        try {
+            const res = await fetch(`${API_BASE}/api/cases/${activeCase.id}`);
+            if (!res.ok) return;
+            activeCase = await res.json();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(activeCase));
+            renderCaseHeader();
+            renderFiles();
+            renderReport();
+        } catch {}
+    }
+
+    chatInput.addEventListener('input', () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
+    });
+    chatInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    sendBtn.addEventListener('click', sendMessage);
+
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text || !activeCase || !activeCase.id) return;
+
+        if (activeTab === 'chat') {
+            welcomeDiv.classList.add('hidden-state');
+            chatMsgs.classList.add('visible');
+        }
+
+        appendBubble(`
+            <div class="bubble-wrap-user">
+                <div class="bubble bubble-usr">${escapeHtml(text)}</div>
+                <div class="bubble-avatar bubble-avatar-usr">
+                    <span class="material-symbols-outlined" style="font-size:16px;color:#fff;">person</span>
+                </div>
+            </div>`);
+
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        sendBtn.disabled = true;
+
+        const typingId = 'typing-' + Date.now();
+        appendBubble(`
+            <div class="bubble-wrap-ai" id="${typingId}">
+                <div class="bubble-avatar bubble-avatar-ai">
+                    <span class="material-symbols-outlined" style="font-size:16px;color:#fff9ef;">gavel</span>
+                </div>
+                <div class="bubble bubble-ai" style="display:flex;align-items:center;gap:6px;padding:14px 18px;">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
+            </div>`);
+
+        try {
+            const res = await fetch(`${API_BASE}/api/cases/${activeCase.id}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text }),
+            });
+            const payload = await res.json();
+            if (!res.ok) throw new Error(payload.error || 'Analysis failed.');
+
+            const citationItems = (payload.citations || []).map(c => {
+                const labels = [...(c.document_headings || []), ...(c.exhibit_labels || [])].join(', ');
+                return `<span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#e8e2d9;padding:1px 5px;">${escapeHtml(c.file)} p.${escapeHtml(String(c.page))}${labels ? ' [' + escapeHtml(labels) + ']' : ''}</span>`;
+            });
+
+            const leads = renderLeadLinks(payload.legal_leads || payload.indian_kanoon);
+            const hasCitations = citationItems.length > 0;
+            const hasLeads = (payload.legal_leads || payload.indian_kanoon || []).filter(l => !l.unavailable).length > 0;
+
+            appendBubble(`
+                <div class="bubble-wrap-ai">
+                    <div class="bubble-avatar bubble-avatar-ai">
+                        <span class="material-symbols-outlined" style="font-size:16px;color:#fff9ef;">gavel</span>
+                    </div>
+                    <div class="bubble bubble-ai" style="max-width:75%;">
+                        <span class="bubble-sender">JudyAI</span>
+                        <div style="line-height:1.65;">${renderMarkdown(payload.answer)}</div>
+                        ${hasCitations ? `
+                        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #c6c6cf;">
+                            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#76767f;margin-bottom:6px;">PDF Sources</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;">${citationItems.join('')}</div>
+                        </div>` : ''}
+                        ${hasLeads ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid #c6c6cf;">
+                            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#76767f;margin-bottom:8px;">Legal Web Leads</div>
+                            ${leads}
+                        </div>` : ''}
+                    </div>
+                </div>`);
+        } catch (err) {
+            appendBubble(`
+                <div class="bubble-wrap-ai">
+                    <div class="bubble-avatar bubble-avatar-ai">
+                        <span class="material-symbols-outlined" style="font-size:16px;color:#fff9ef;">error</span>
+                    </div>
+                    <div class="bubble bubble-ai"><span class="bubble-sender">JudyAI</span>${escapeHtml(err.message || 'Could not reach the backend.')}</div>
+                </div>`);
+        } finally {
+            const el = document.getElementById(typingId);
+            if (el) el.remove();
+            sendBtn.disabled = false;
+        }
+    }
+
+    renderCaseHeader();
+    renderFiles();
+    renderReport();
+    refreshCase();
+</script>
+</body>
+</html>

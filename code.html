@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>JudyAI | Legal Intelligence</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Hanken+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff", "on-primary": "#ffffff", "surface": "#fff9ef",
+                        "primary-fixed": "#dce1ff", "secondary": "#b71619", "surface-container": "#f3ede4",
+                        "tertiary-fixed-dim": "#cdc5c3", "on-primary-fixed": "#0e193c",
+                        "secondary-fixed-dim": "#ffb4ab", "surface-variant": "#e8e2d9",
+                        "outline-variant": "#c6c6cf", "surface-container-high": "#ede7de",
+                        "background": "#fff9ef", "inverse-surface": "#33302a",
+                        "error-container": "#ffdad6", "on-tertiary-fixed": "#1e1b1a",
+                        "on-secondary-container": "#fffbff", "surface-bright": "#fff9ef",
+                        "inverse-primary": "#bbc5f1", "on-secondary-fixed-variant": "#93000b",
+                        "tertiary-fixed": "#e9e1de", "surface-container-low": "#f9f3ea",
+                        "error": "#ba1a1a", "surface-container-highest": "#e8e2d9",
+                        "on-surface-variant": "#45464e", "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#a7a09e", "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#410002", "surface-dim": "#dfd9d0",
+                        "secondary-fixed": "#ffdad6", "tertiary": "#262221",
+                        "on-primary-container": "#969fca", "primary-fixed-dim": "#bbc5f1",
+                        "primary": "#162043", "primary-container": "#2c365a",
+                        "secondary-container": "#da332f", "outline": "#76767f",
+                        "on-surface": "#1d1b16", "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a", "on-background": "#1d1b16",
+                        "inverse-on-surface": "#f6f0e7", "on-tertiary-fixed-variant": "#4b4644",
+                        "surface-tint": "#535d83", "tertiary-container": "#3c3736",
+                        "on-primary-fixed-variant": "#3b456a"
+                    },
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    "spacing": {
+                        "gutter": "24px", "margin-mobile": "20px", "border-thick": "3px",
+                        "margin-desktop": "64px", "unit": "4px", "border-thin": "1px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Hanken Grotesk"], "label-technical": ["JetBrains Mono"],
+                        "label-bold": ["Hanken Grotesk"], "headline-lg": ["Libre Caslon Text"],
+                        "display-xl": ["Libre Caslon Text"], "headline-md": ["Libre Caslon Text"],
+                        "headline-lg-mobile": ["Libre Caslon Text"], "body-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-technical": ["11px", { "lineHeight": "15px", "fontWeight": "500" }],
+                        "label-bold": ["13px", { "lineHeight": "17px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-xl": ["52px", { "lineHeight": "58px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["22px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "30px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "21px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fff9ef;
+            color: #1d1b16;
+            overflow-x: hidden;
+            min-height: max(884px, 100dvh);
+        }
+        .grain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; opacity: 0.05;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .brutalist-border { border: 3px solid #162043; }
+        .brutalist-shadow { box-shadow: 6px 6px 0px 0px #162043; }
+        .brutalist-shadow-hover:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #162043; }
+        .vertical-text { writing-mode: vertical-rl; text-orientation: mixed; }
+        .grid-line { background-color: #162043; opacity: 0.1; }
+
+        /* Sidebar slide transition */
+        #sidebar { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+        #sidebar.sidebar-closed { transform: translateX(-100%); }
+        #sidebar-backdrop { transition: opacity 0.28s ease; }
+
+        /* View transitions */
+        .view { display: none; }
+        .view.active { display: flex; }
+
+        /* Chat bubbles */
+        .chat-bubble-user {
+            background-color: #162043; color: #fff9ef;
+            border: 3px solid #162043;
+        }
+        .chat-bubble-ai {
+            background-color: #f3ede4; color: #1d1b16;
+            border: 3px solid #162043;
+        }
+        /* Chat scroll */
+        #chat-messages { scroll-behavior: smooth; }
+
+        /* Sidebar nav item active state */
+        .sidebar-nav-item.active {
+            background-color: #e8e2d9;
+            border-left: 3px solid #b71619;
+        }
+        .sidebar-nav-item { border-left: 3px solid transparent; }
+
+        /* Textarea auto-resize */
+        #chat-input { resize: none; overflow-y: hidden; min-height: 44px; max-height: 160px; }
+
+        /* ── Upload / Intake screen ──────────────────────────────── */
+        .dropzone {
+            border: 3px dashed #162043;
+            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+        }
+        .dropzone.drag-active {
+            background-color: #e8e2d9;
+            border-color: #b71619;
+        }
+        .dropzone.drag-active .dropzone-icon {
+            transform: scale(1.08) rotate(-4deg);
+        }
+        .dropzone-icon { transition: transform 0.15s ease; }
+
+        .file-chip {
+            border: 3px solid #162043;
+            background-color: #fff9ef;
+        }
+        .file-chip .remove-file {
+            opacity: 0.5;
+            transition: opacity 0.15s ease, color 0.15s ease;
+        }
+        .file-chip:hover .remove-file { opacity: 1; }
+
+        @keyframes chipIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .file-chip { animation: chipIn 0.2s ease; }
+
+        #case-title-input:focus { outline: none; border-color: #b71619; }
+    </style>
+</head>
+
+<body class="font-body-md selection:bg-secondary selection:text-white">
+    <div class="grain-overlay"></div>
+
+    <!-- ── Sidebar Backdrop ─────────────────────────────────────── -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-primary/30 z-40 hidden opacity-0"></div>
+
+    <!-- ── Sidebar ──────────────────────────────────────────────── -->
+    <nav id="sidebar" class="sidebar-closed fixed left-0 top-0 h-full flex flex-col z-50 bg-surface-container border-r-[3px] border-primary w-64">
+
+        <!-- HISTORY MODE (shown on home) -->
+        <div id="sidebar-history-mode" class="flex flex-col h-full">
+            <div class="p-5 border-b-[3px] border-primary flex-shrink-0 flex items-center justify-between">
+                <div>
+                    <h2 class="font-label-bold text-label-bold text-primary uppercase tracking-widest">Case History</h2>
+                    <p class="font-label-technical text-label-technical text-on-surface-variant mt-1" id="case-count">0 cases</p>
+                </div>
+                <button id="sidebar-close" class="text-primary hover:text-secondary transition-colors" title="Close">
+                    <span class="material-symbols-outlined" style="font-size:20px">close</span>
+                </button>
+            </div>
+            <div class="flex-grow overflow-y-auto" id="case-history-list">
+                <div id="empty-state" class="p-5 text-center mt-4">
+                    <span class="material-symbols-outlined text-outline text-3xl mb-2 block">folder_open</span>
+                    <p class="font-label-technical text-label-technical text-on-surface-variant uppercase">No cases yet.<br />Click NEW CASE to begin.</p>
+                </div>
+            </div>
+            <div class="p-4 border-t-[3px] border-primary flex-shrink-0">
+                <div class="p-3 brutalist-border bg-surface-container-high text-primary font-label-technical text-label-technical">
+                    V. 2.0.4 &mdash; STABLE_BUILD
+                </div>
+            </div>
+        </div>
+
+        <!-- CASE NAV MODE (shown inside a chat) -->
+        <div id="sidebar-case-mode" class="hidden flex-col h-full">
+            <div class="p-5 border-b-[3px] border-primary flex-shrink-0 flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                    <p class="font-label-technical text-label-technical text-secondary uppercase tracking-widest">Active Case</p>
+                    <h2 class="font-label-bold text-label-bold text-primary uppercase mt-0.5 truncate" id="sidebar-case-title">—</h2>
+                </div>
+                <button id="sidebar-close-chat" class="text-primary hover:text-secondary transition-colors ml-2 flex-shrink-0" title="Close">
+                    <span class="material-symbols-outlined" style="font-size:20px">close</span>
+                </button>
+            </div>
+
+            <!-- Nav items -->
+            <div class="flex-grow overflow-y-auto pt-2">
+                <button data-tab="chat" class="sidebar-nav-item active w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
+                    <span class="material-symbols-outlined mr-3" style="font-size:20px">chat</span>
+                    <span class="font-label-bold text-label-bold uppercase">Current Chat</span>
+                </button>
+                <button data-tab="files" class="sidebar-nav-item w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
+                    <span class="material-symbols-outlined mr-3" style="font-size:20px">folder_open</span>
+                    <span class="font-label-bold text-label-bold uppercase">Case Files</span>
+                </button>
+                <button data-tab="reports" class="sidebar-nav-item w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
+                    <span class="material-symbols-outlined mr-3" style="font-size:20px">description</span>
+                    <span class="font-label-bold text-label-bold uppercase">Reports Generated</span>
+                </button>
+            </div>
+
+            <!-- Back to home -->
+            <div class="p-4 border-t-[3px] border-primary flex-shrink-0">
+                <button id="back-to-home-btn" class="w-full flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors font-label-technical text-label-technical uppercase">
+                    <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span>
+                    Back to Home
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── Main ─────────────────────────────────────────────────── -->
+    <main id="main-content" class="min-h-screen flex flex-col relative overflow-hidden">
+
+        <!-- Shared Header -->
+        <header class="flex justify-between items-center w-full px-10 md:px-margin-desktop py-6 bg-background border-b-[3px] border-primary z-40 flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button id="menu-toggle" class="text-primary hover:text-secondary transition-colors" title="Toggle Sidebar" aria-label="Toggle sidebar">
+                    <span class="material-symbols-outlined text-3xl">menu</span>
+                </button>
+                <h1 class="font-headline-lg text-headline-lg font-bold text-primary uppercase tracking-tighter">JudyAI</h1>
+            </div>
+            <div class="flex items-center gap-10">
+                <nav class="hidden md:flex gap-8" id="header-nav-home">
+                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase" href="#">Analysis</a>
+                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase" href="#">Precedents</a>
+                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase" href="#">Intelligence</a>
+                </nav>
+                <!-- Case title in header (chat mode) -->
+                <span id="header-case-title" class="hidden font-label-technical text-label-technical text-on-surface-variant uppercase tracking-widest"></span>
+                <button id="new-case-header" class="bg-secondary text-on-secondary px-6 py-2 brutalist-border font-label-bold hover:bg-primary transition-colors uppercase tracking-widest">
+                    NEW CASE
+                </button>
+            </div>
+        </header>
+
+        <!-- ── VIEW: HOME ───────────────────────────────────────── -->
+        <div id="view-home" class="view active flex-col flex-grow">
+            <section class="flex-grow flex flex-col relative px-10 md:px-margin-desktop pt-16 pb-24">
+                <div class="absolute top-0 right-margin-desktop bottom-0 w-[1px] grid-line hidden md:block"></div>
+                <div class="absolute top-1/2 left-0 right-0 h-[1px] grid-line hidden md:block"></div>
+
+                <div class="relative z-10 w-full mb-12">
+                    <h2 class="font-display-xl text-[7vw] md:text-display-xl leading-none text-primary uppercase border-b-[3px] border-primary pb-6 mb-6 block">
+                        JUDYAI
+                    </h2>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+                        <div class="max-w-2xl">
+                            <p class="font-body-lg text-body-lg text-primary mb-6 leading-snug">
+                                The definitive intelligence for legal strategy and case law analysis.
+                            </p>
+                            <button id="new-case-hero" class="bg-secondary text-surface px-8 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-[0.15em] transition-all hover:bg-primary">
+                                NEW CASE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mt-16">
+                    <div class="md:col-span-7 brutalist-border overflow-hidden group relative h-80">
+                        <img class="w-full h-full object-cover grayscale contrast-125 transition-transform duration-700 group-hover:scale-110"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyqNew5-pZE4NnuWaCOtZqqI7nbV8F6PvLw4zRMbTe-1UykR7VGr8nGqqUm5aH9s89iOH0My0hz59iFzlSFRgVUiX4u-YIJL2RMQnj0LSk7EOT2ybvCfPyS63_aDDFkd5WQD72DRrPm2ry7qzYUZXKJIEn19Rxd5PBfPn1eIoeTtuYc05buKCuNzH4wcX-LZud6NyB6ITtkjnVc-B1l_tyQfv8E7ZbLuZkK-O5TMJecf3FrbsOLcxS043DAzWq28h8Ym7iAMrVi1s"
+                            alt="Courthouse" />
+                        <div class="absolute inset-0 bg-primary/20 mix-blend-multiply transition-opacity group-hover:opacity-0"></div>
+                        <div class="absolute bottom-0 left-0 p-6 bg-primary text-surface font-label-bold uppercase">Structure of Law</div>
+                    </div>
+                    <div class="md:col-span-5 flex flex-col gap-8">
+                        <div class="brutalist-border p-8 bg-surface-container-low flex-grow">
+                            <span class="material-symbols-outlined text-secondary text-4xl mb-4">gavel</span>
+                            <h3 class="font-headline-md text-headline-md text-primary mb-4">Unmatched Precision</h3>
+                            <p class="font-body-md text-body-md text-on-surface-variant">
+                                Leveraging generative models fine-tuned on centuries of jurisdictional data to provide high-fidelity strategy simulations.
+                            </p>
+                        </div>
+                        <div class="brutalist-border p-8 bg-primary text-surface flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <span class="font-label-technical text-surface/60">SYSTEM_METRIC</span>
+                                <span class="font-label-technical text-secondary">LIVE</span>
+                            </div>
+                            <div class="mt-8">
+                                <span class="font-display-xl text-5xl font-bold">99.8%</span>
+                                <span class="font-label-bold block mt-2 uppercase tracking-widest text-surface/80">Search Accuracy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="w-full flex flex-col md:flex-row justify-between items-center px-10 md:px-margin-desktop py-gutter bg-primary border-t-[3px] border-secondary z-40 flex-shrink-0">
+                <div class="flex flex-col md:flex-row items-center gap-10">
+                    <h3 class="font-headline-md text-headline-md text-surface uppercase">JUDYAI</h3>
+                    <span class="font-label-technical text-label-technical text-surface uppercase opacity-70">© 2024 JUDYAI. ALL RIGHTS RESERVED.</span>
+                </div>
+                <div class="flex gap-8 mt-8 md:mt-0">
+                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase" href="#">Terms of Service</a>
+                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase" href="#">Privacy Policy</a>
+                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase" href="#">Legal Disclaimer</a>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ── VIEW: NEW CASE INTAKE / UPLOAD ──────────────────── -->
+        <div id="view-upload" class="view flex-col flex-grow overflow-hidden">
+            <div class="flex-grow overflow-y-auto px-10 md:px-margin-desktop pt-16 pb-16">
+                <div class="max-w-3xl mx-auto w-full">
+
+                    <p class="font-label-technical text-label-technical text-secondary uppercase tracking-widest mb-2">Step 1 of 1 — Case Intake</p>
+                    <h2 class="font-display-xl text-4xl md:text-display-xl leading-none text-primary uppercase border-b-[3px] border-primary pb-6 mb-8">
+                        Open a New Case
+                    </h2>
+
+                    <!-- Case title -->
+                    <label for="case-title-input" class="font-label-bold text-label-bold text-primary uppercase tracking-widest block mb-2">Case Name</label>
+                    <input id="case-title-input" type="text" placeholder="e.g. Smith v. Johnson — Contract Dispute"
+                        class="w-full px-4 py-3 mb-8 brutalist-border bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant" />
+
+                    <!-- Dropzone -->
+                    <label class="font-label-bold text-label-bold text-primary uppercase tracking-widest block mb-2">Case Files</label>
+                    <div id="dropzone" class="dropzone p-10 flex flex-col items-center text-center gap-3 cursor-pointer bg-surface-container-low">
+                        <span class="material-symbols-outlined dropzone-icon text-secondary" style="font-size:44px">upload_file</span>
+                        <p class="font-label-bold text-label-bold text-primary uppercase">Drag &amp; drop files here, or click to browse</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">PDF, DOCX, TXT, and image files accepted</p>
+                        <input id="file-input" type="file" multiple class="hidden"
+                            accept=".pdf,.doc,.docx,.txt,.rtf,.png,.jpg,.jpeg,.xls,.xlsx" />
+                    </div>
+
+                    <!-- File list -->
+                    <div id="file-list" class="flex flex-col gap-3 mt-6"></div>
+                    <p id="file-list-empty" class="font-label-technical text-label-technical text-on-surface-variant uppercase mt-6">
+                        No files added yet — you can also add evidence later from Case Files.
+                    </p>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col-reverse md:flex-row justify-between items-stretch md:items-center gap-4 mt-12 border-t-[3px] border-primary pt-8">
+                        <button id="upload-cancel" class="font-label-bold text-label-bold text-primary uppercase tracking-widest hover:text-secondary transition-colors px-2 py-3">
+                            Cancel
+                        </button>
+                        <button id="upload-submit" class="bg-secondary text-surface px-8 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-[0.15em] transition-all hover:bg-primary flex items-center justify-center gap-2">
+                            Create Case &amp; Continue
+                            <span class="material-symbols-outlined" style="font-size:20px">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── VIEW: CHAT ───────────────────────────────────────── -->
+        <div id="view-chat" class="view flex-col flex-grow overflow-hidden">
+
+            <!-- Tab content panels -->
+            <div id="tab-chat" class="flex-grow flex flex-col overflow-hidden">
+                <!-- Messages area -->
+                <div id="chat-messages" class="flex-grow overflow-y-auto px-6 md:px-12 py-8 flex flex-col gap-6">
+                    <!-- Welcome message -->
+                    <div class="flex items-start gap-4 max-w-3xl">
+                        <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
+                            <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
+                        </div>
+                        <div class="chat-bubble-ai px-5 py-4 flex-1">
+                            <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
+                            <p class="font-body-md text-body-md">Case initialized. I am ready to assist with legal research, strategy simulation, and precedent analysis. How may I assist you?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input bar -->
+                <div class="flex-shrink-0 border-t-[3px] border-primary bg-background px-6 md:px-12 py-5">
+                    <div class="flex items-end gap-4 max-w-4xl mx-auto">
+                        <div class="flex-grow brutalist-border bg-surface-container-low overflow-hidden">
+                            <textarea id="chat-input" rows="1"
+                                class="w-full px-4 py-3 bg-transparent font-body-md text-body-md text-on-surface outline-none placeholder:text-on-surface-variant"
+                                placeholder="Describe your legal query…"></textarea>
+                        </div>
+                        <button id="chat-send"
+                            class="flex-shrink-0 bg-secondary text-on-secondary px-5 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-widest hover:bg-primary transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:18px">send</span>
+                            Send
+                        </button>
+                    </div>
+                    <p class="font-label-technical text-label-technical text-on-surface-variant text-center mt-3">JudyAI may produce inaccurate legal information. Always verify with a qualified attorney.</p>
+                </div>
+            </div>
+
+            <!-- Case Files panel -->
+            <div id="tab-files" class="hidden flex-grow flex-col overflow-y-auto px-6 md:px-12 py-8">
+                <div class="max-w-3xl">
+                    <h2 class="font-headline-md text-headline-md text-primary uppercase border-b-[3px] border-primary pb-4 mb-8">Case Files</h2>
+                    <div id="case-files-uploaded" class="flex flex-col gap-3 mb-8"></div>
+                    <div id="case-files-empty" class="brutalist-border p-8 bg-surface-container-low flex flex-col items-center text-center gap-4">
+                        <span class="material-symbols-outlined text-outline text-5xl">upload_file</span>
+                        <p class="font-label-bold text-label-bold text-primary uppercase">No files uploaded yet</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Upload case documents, evidence, and supporting materials here.</p>
+                        <button id="case-files-upload-btn" class="mt-2 bg-primary text-surface px-6 py-2 brutalist-border font-label-bold uppercase tracking-widest hover:bg-secondary transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:18px">upload</span>
+                            Upload File
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Generated panel -->
+            <div id="tab-reports" class="hidden flex-grow flex-col overflow-y-auto px-6 md:px-12 py-8">
+                <div class="max-w-3xl">
+                    <h2 class="font-headline-md text-headline-md text-primary uppercase border-b-[3px] border-primary pb-4 mb-8">Reports Generated</h2>
+                    <div class="brutalist-border p-8 bg-surface-container-low flex flex-col items-center text-center gap-4">
+                        <span class="material-symbols-outlined text-outline text-5xl">description</span>
+                        <p class="font-label-bold text-label-bold text-primary uppercase">No reports yet</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Reports generated during your case analysis will appear here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // ── Grid Parallax ───────────────────────────────────────────────
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.querySelectorAll('.grid-line').forEach((line, i) => {
+                line.style.transform = `translateY(${scrolled * (i + 1) * 0.1}px)`;
+            });
+        });
+
+        // ── State ───────────────────────────────────────────────────────
+        let currentView   = 'home';   // 'home' | 'upload' | 'chat'
+        let activeCase     = null;    // current case object
+        let activeTab      = 'chat';  // 'chat' | 'files' | 'reports'
+        let pendingFiles   = [];      // files staged on the intake screen: {id, name, size, type, file}
+        const API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:5000' : window.location.origin;
+
+        // ── Sidebar ─────────────────────────────────────────────────────
+        const sidebar  = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+
+        function openSidebar() {
+            sidebar.classList.remove('sidebar-closed');
+            backdrop.classList.remove('hidden');
+            requestAnimationFrame(() => backdrop.classList.remove('opacity-0'));
+        }
+        function closeSidebar() {
+            sidebar.classList.add('sidebar-closed');
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => backdrop.classList.add('hidden'), 280);
+        }
+
+        document.getElementById('menu-toggle').addEventListener('click', openSidebar);
+        document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+        document.getElementById('sidebar-close-chat').addEventListener('click', closeSidebar);
+        backdrop.addEventListener('click', closeSidebar);
+
+        // Switch sidebar between history-mode and case-mode
+        function setSidebarMode(mode) {
+            const historyMode = document.getElementById('sidebar-history-mode');
+            const caseMode    = document.getElementById('sidebar-case-mode');
+            if (mode === 'history') {
+                historyMode.classList.remove('hidden');
+                historyMode.classList.add('flex');
+                caseMode.classList.add('hidden');
+                caseMode.classList.remove('flex');
+            } else {
+                historyMode.classList.add('hidden');
+                historyMode.classList.remove('flex');
+                caseMode.classList.remove('hidden');
+                caseMode.classList.add('flex');
+            }
+        }
+
+        // ── View Switching ───────────────────────────────────────────────
+        function showView(view) {
+            currentView = view;
+            document.getElementById('view-home').classList.toggle('active', view === 'home');
+            document.getElementById('view-upload').classList.toggle('active', view === 'upload');
+            document.getElementById('view-chat').classList.toggle('active', view === 'chat');
+
+            const headerNav   = document.getElementById('header-nav-home');
+            const headerTitle = document.getElementById('header-case-title');
+            const newCaseBtn  = document.getElementById('new-case-header');
+
+            if (view === 'chat') {
+                setSidebarMode('case');
+                headerNav.classList.add('hidden');
+                headerTitle.classList.remove('hidden');
+                headerTitle.textContent = activeCase ? activeCase.title : '';
+                document.getElementById('sidebar-case-title').textContent = activeCase ? activeCase.title : '';
+                newCaseBtn.classList.remove('hidden');
+            } else {
+                setSidebarMode('history');
+                headerTitle.classList.add('hidden');
+                if (view === 'upload') {
+                    headerNav.classList.add('hidden');
+                    newCaseBtn.classList.add('hidden');
+                } else {
+                    headerNav.classList.remove('hidden');
+                    newCaseBtn.classList.remove('hidden');
+                }
+            }
+        }
+
+        // ── Sidebar Tab Navigation (chat mode) ──────────────────────────
+        document.querySelectorAll('[data-tab]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                switchTab(tab);
+                closeSidebar();
+            });
+        });
+
+        function switchTab(tab) {
+            activeTab = tab;
+            // Update nav item active state
+            document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            // Show/hide panels
+            document.getElementById('tab-chat').classList.toggle('hidden', tab !== 'chat');
+            document.getElementById('tab-chat').classList.toggle('flex', tab === 'chat');
+            document.getElementById('tab-files').classList.toggle('hidden', tab !== 'files');
+            document.getElementById('tab-files').classList.toggle('flex', tab === 'files');
+            document.getElementById('tab-reports').classList.toggle('hidden', tab !== 'reports');
+            document.getElementById('tab-reports').classList.toggle('flex', tab === 'reports');
+        }
+
+        // Back to home
+        document.getElementById('back-to-home-btn').addEventListener('click', () => {
+            closeSidebar();
+            showView('home');
+            activeCase = null;
+        });
+
+        // ── Case History ────────────────────────────────────────────────
+        const STORAGE_KEY = 'judyai_cases';
+
+        function loadCases() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+            catch { return []; }
+        }
+        function saveCases(cases) { localStorage.setItem(STORAGE_KEY, JSON.stringify(cases)); }
+
+        function formatDate(iso) {
+            return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+        function statusBadge(status) {
+            const map = {
+                active:  { bg: 'bg-secondary', text: 'text-white' },
+                pending: { bg: 'bg-surface-container-high', text: 'text-primary' },
+                closed:  { bg: 'bg-primary', text: 'text-surface' },
+            };
+            const s = map[status] || map.pending;
+            return `<span class="${s.bg} ${s.text} font-label-technical text-[10px] uppercase px-1.5 py-0.5 tracking-widest">${status}</span>`;
+        }
+
+        function openCase(c) {
+            activeCase = c;
+            // Reset chat to welcome message only
+            const msgs = document.getElementById('chat-messages');
+            msgs.innerHTML = `
+                <div class="flex items-start gap-4 max-w-3xl">
+                    <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
+                    </div>
+                    <div class="chat-bubble-ai px-5 py-4 flex-1">
+                        <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
+                        <p class="font-body-md text-body-md">Case <strong>${c.title}</strong> initialized. I am ready to assist with legal research, strategy simulation, and precedent analysis. How may I assist you?</p>
+                    </div>
+                </div>`;
+            localStorage.setItem('judyai_active_case', JSON.stringify(c));
+            window.location.href = 'chat.html';
+        }
+
+        function renderCases() {
+            const cases = loadCases();
+            const list  = document.getElementById('case-history-list');
+            const empty = document.getElementById('empty-state');
+            const count = document.getElementById('case-count');
+
+            count.textContent = cases.length + (cases.length === 1 ? ' case' : ' cases');
+            list.querySelectorAll('.case-item').forEach(el => el.remove());
+
+            if (cases.length === 0) { empty.style.display = ''; return; }
+            empty.style.display = 'none';
+
+            [...cases].reverse().forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'case-item border-b border-outline-variant hover:bg-surface-variant transition-colors duration-75 cursor-pointer group';
+                item.dataset.id = c.id;
+                const fileCount = (c.files && c.files.length) ? `${c.files.length} file${c.files.length === 1 ? '' : 's'}` : '';
+                item.innerHTML = `
+                    <div class="px-5 py-4 flex flex-col gap-1">
+                        <div class="flex items-start justify-between gap-2">
+                            <span class="font-label-bold text-label-bold text-primary uppercase leading-snug flex-1 truncate" title="${c.title}">${c.title}</span>
+                            <button class="delete-case opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant hover:text-secondary flex-shrink-0" data-id="${c.id}" title="Remove case">
+                                <span class="material-symbols-outlined" style="font-size:16px">close</span>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            ${statusBadge(c.status)}
+                            <span class="font-label-technical text-label-technical text-on-surface-variant">${fileCount ? fileCount + ' · ' : ''}${formatDate(c.date)}</span>
+                        </div>
+                    </div>`;
+                // Click to open case
+                item.addEventListener('click', (e) => {
+                    if (e.target.closest('.delete-case')) return;
+                    openCase(c);
+                });
+                list.appendChild(item);
+            });
+
+            list.querySelectorAll('.delete-case').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    saveCases(loadCases().filter(c => c.id !== btn.dataset.id));
+                    renderCases();
+                });
+            });
+        }
+
+        // ── New Case Intake / Upload screen ──────────────────────────────
+        const dropzone       = document.getElementById('dropzone');
+        const fileInput      = document.getElementById('file-input');
+        const fileListEl     = document.getElementById('file-list');
+        const fileListEmpty  = document.getElementById('file-list-empty');
+        const caseTitleInput = document.getElementById('case-title-input');
+
+        function bytesToSize(bytes) {
+            if (!bytes) return '0 KB';
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), sizes.length - 1);
+            return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${sizes[i]}`;
+        }
+
+        function iconForFile(name) {
+            const ext = (name.split('.').pop() || '').toLowerCase();
+            if (ext === 'pdf') return 'picture_as_pdf';
+            if (['doc', 'docx', 'rtf'].includes(ext)) return 'description';
+            if (['xls', 'xlsx', 'csv'].includes(ext)) return 'table_chart';
+            if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) return 'image';
+            if (ext === 'txt') return 'article';
+            return 'draft';
+        }
+
+        function openUploadView() {
+            pendingFiles = [];
+            caseTitleInput.value = '';
+            renderFileList();
+            showView('upload');
+        }
+
+        function renderFileList() {
+            fileListEl.innerHTML = '';
+            fileListEmpty.classList.toggle('hidden', pendingFiles.length > 0);
+            pendingFiles.forEach(f => {
+                const chip = document.createElement('div');
+                chip.className = 'file-chip flex items-center gap-3 px-4 py-3';
+                chip.innerHTML = `
+                    <span class="material-symbols-outlined text-secondary flex-shrink-0" style="font-size:22px">${iconForFile(f.name)}</span>
+                    <span class="font-body-md text-body-md text-on-surface flex-1 truncate" title="${f.name}">${f.name}</span>
+                    <span class="font-label-technical text-label-technical text-on-surface-variant flex-shrink-0">${bytesToSize(f.size)}</span>
+                    <button class="remove-file text-on-surface-variant hover:text-secondary flex-shrink-0" data-id="${f.id}" title="Remove file">
+                        <span class="material-symbols-outlined" style="font-size:18px">close</span>
+                    </button>`;
+                fileListEl.appendChild(chip);
+            });
+            fileListEl.querySelectorAll('.remove-file').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    pendingFiles = pendingFiles.filter(f => f.id !== btn.dataset.id);
+                    renderFileList();
+                });
+            });
+        }
+
+        function addFiles(fileArray) {
+            [...fileArray].forEach(f => {
+                if ((f.type && f.type !== 'application/pdf') || !f.name.toLowerCase().endsWith('.pdf')) return;
+                pendingFiles.push({
+                    id:   `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                    name: f.name,
+                    size: f.size,
+                    type: f.type,
+                    file: f,
+                });
+            });
+            if (!caseTitleInput.value.trim() && pendingFiles.length) {
+                caseTitleInput.value = pendingFiles[0].name
+                    .replace(/\.pdf$/i, '')
+                    .replace(/[_-]+/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+            renderFileList();
+        }
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            addFiles(e.target.files);
+            fileInput.value = '';
+        });
+
+        ['dragenter', 'dragover'].forEach(evt => {
+            dropzone.addEventListener(evt, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.add('drag-active');
+            });
+        });
+        ['dragleave', 'dragend'].forEach(evt => {
+            dropzone.addEventListener(evt, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.remove('drag-active');
+            });
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('drag-active');
+            if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+        });
+
+        document.getElementById('upload-cancel').addEventListener('click', () => {
+            pendingFiles = [];
+            showView('home');
+        });
+
+        document.getElementById('upload-submit').addEventListener('click', async () => {
+            if (!pendingFiles.length) {
+                alert('Please upload at least one PDF case file.');
+                return;
+            }
+            const title = caseTitleInput.value.trim() || pendingFiles[0].name.replace(/\.pdf$/i, '').replace(/[_-]+/g, ' ');
+
+            const submitBtn = document.getElementById('upload-submit');
+            const original = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Scanning PDFs &amp; Building RAG...';
+
+            try {
+                const form = new FormData();
+                form.append('title', title);
+                pendingFiles.forEach(f => form.append('files', f.file, f.name));
+                const res = await fetch(`${API_BASE}/api/cases`, { method: 'POST', body: form });
+                const payload = await res.json();
+                if (!res.ok) throw new Error(payload.error || 'Upload failed.');
+
+                const newCase = {
+                    id: payload.id,
+                    title: payload.title,
+                    status: payload.status || 'active',
+                    date: new Date((payload.date || Date.now() / 1000) * 1000).toISOString(),
+                    files: payload.files || [],
+                    analysis: payload.analysis || null,
+                };
+                const cases = loadCases().filter(c => c.id !== newCase.id);
+                cases.push(newCase);
+                saveCases(cases);
+                renderCases();
+                localStorage.setItem('judyai_active_case', JSON.stringify(newCase));
+                window.location.href = 'chat.html';
+            } catch (err) {
+                alert(err.message || 'Could not create the case.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = original;
+            }
+        });
+
+        // Both entry points now open the intake/upload screen first
+        document.getElementById('new-case-header').addEventListener('click', openUploadView);
+        document.getElementById('new-case-hero').addEventListener('click', openUploadView);
+
+        // Shortcut from the Case Files tab inside an active chat
+        const caseFilesUploadBtn = document.getElementById('case-files-upload-btn');
+        if (caseFilesUploadBtn) {
+            caseFilesUploadBtn.addEventListener('click', () => fileInput && fileInput.click());
+        }
+
+        // ── Chat Send Logic ──────────────────────────────────────────────
+        const chatInput = document.getElementById('chat-input');
+        const chatSend  = document.getElementById('chat-send');
+        const chatMsgs  = document.getElementById('chat-messages');
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
+        });
+        // Send on Enter (Shift+Enter for newline)
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+        chatSend.addEventListener('click', sendMessage);
+
+        const aiResponses = [
+            "Based on the precedents in your jurisdiction, this argument has merit. I recommend reviewing <em>Hadley v. Baxendale</em> and related contract doctrine cases.",
+            "Analyzing the statutory framework... The relevant provisions suggest a strong basis for your position. Key considerations include standing, burden of proof, and applicable statutes of limitations.",
+            "From the case law I have reviewed, courts have generally ruled in favor of the plaintiff in analogous circumstances. I advise preparing a detailed discovery strategy.",
+            "This matter involves complex evidentiary standards. I recommend a thorough review of the documentary evidence and witness depositions before proceeding.",
+            "Under current jurisdictional precedent, this claim faces significant procedural hurdles. Consider whether an alternative dispute resolution pathway may be more favorable.",
+        ];
+        let aiIndex = 0;
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // User bubble
+            const userBubble = document.createElement('div');
+            userBubble.className = 'flex items-start gap-4 max-w-3xl self-end ml-auto flex-row-reverse';
+            userBubble.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 bg-secondary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white" style="font-size:16px">person</span>
+                </div>
+                <div class="chat-bubble-user px-5 py-4 flex-1">
+                    <p class="font-body-md text-body-md">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+                </div>`;
+            chatMsgs.appendChild(userBubble);
+
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
+            // Typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'flex items-start gap-4 max-w-3xl';
+            typing.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
+                </div>
+                <div class="chat-bubble-ai px-5 py-4 flex items-center gap-2">
+                    <span class="font-label-technical text-label-technical text-on-surface-variant uppercase animate-pulse">Analyzing…</span>
+                </div>`;
+            chatMsgs.appendChild(typing);
+            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
+            // Simulated AI response
+            setTimeout(() => {
+                typing.remove();
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'flex items-start gap-4 max-w-3xl';
+                const response = aiResponses[aiIndex % aiResponses.length];
+                aiIndex++;
+                aiBubble.innerHTML = `
+                    <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
+                    </div>
+                    <div class="chat-bubble-ai px-5 py-4 flex-1">
+                        <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
+                        <p class="font-body-md text-body-md">${response}</p>
+                    </div>`;
+                chatMsgs.appendChild(aiBubble);
+                chatMsgs.scrollTop = chatMsgs.scrollHeight;
+            }, 1200);
+        }
+
+        // ── Case Files tab: reflect files saved on the active case ───────
+        function renderActiveCaseFiles() {
+            const container = document.getElementById('case-files-uploaded');
+            const emptyState = document.getElementById('case-files-empty');
+            if (!container || !emptyState) return;
+            const files = (activeCase && activeCase.files) || [];
+            container.innerHTML = '';
+            emptyState.classList.toggle('hidden', files.length > 0);
+            files.forEach(f => {
+                const row = document.createElement('div');
+                row.className = 'file-chip flex items-center gap-3 px-4 py-3';
+                row.innerHTML = `
+                    <span class="material-symbols-outlined text-secondary flex-shrink-0" style="font-size:22px">${iconForFile(f.name)}</span>
+                    <span class="font-body-md text-body-md text-on-surface flex-1 truncate" title="${f.name}">${f.name}</span>
+                    <span class="font-label-technical text-label-technical text-on-surface-variant flex-shrink-0">${bytesToSize(f.size)}</span>`;
+                container.appendChild(row);
+            });
+        }
+
+        // ── Init ─────────────────────────────────────────────────────────
+        showView('home');
+        renderCases();
+        renderActiveCaseFiles();
+    </script>
+</body>
+</html>
