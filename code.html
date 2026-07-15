@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>JudyAI | Legal Intelligence</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Hanken+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Hanken+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet" />
     <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
@@ -72,82 +76,157 @@
             overflow-x: hidden;
             min-height: max(884px, 100dvh);
         }
+
         .grain-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999; opacity: 0.05;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.05;
             background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
         }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .brutalist-border { border: 3px solid #162043; }
-        .brutalist-shadow { box-shadow: 6px 6px 0px 0px #162043; }
-        .brutalist-shadow-hover:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #162043; }
-        .vertical-text { writing-mode: vertical-rl; text-orientation: mixed; }
-        .grid-line { background-color: #162043; opacity: 0.1; }
+
+        .brutalist-border {
+            border: 3px solid #162043;
+        }
+
+        .brutalist-shadow {
+            box-shadow: 6px 6px 0px 0px #162043;
+        }
+
+        .brutalist-shadow-hover:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px #162043;
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .grid-line {
+            background-color: #162043;
+            opacity: 0.1;
+        }
 
         /* Sidebar slide transition */
-        #sidebar { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
-        #sidebar.sidebar-closed { transform: translateX(-100%); }
-        #sidebar-backdrop { transition: opacity 0.28s ease; }
+        #sidebar {
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #sidebar.sidebar-closed {
+            transform: translateX(-100%);
+        }
+
+        #sidebar-backdrop {
+            transition: opacity 0.28s ease;
+        }
 
         /* View transitions */
-        .view { display: none; }
-        .view.active { display: flex; }
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: flex;
+        }
 
         /* Chat bubbles */
         .chat-bubble-user {
-            background-color: #162043; color: #fff9ef;
+            background-color: #162043;
+            color: #fff9ef;
             border: 3px solid #162043;
         }
+
         .chat-bubble-ai {
-            background-color: #f3ede4; color: #1d1b16;
+            background-color: #f3ede4;
+            color: #1d1b16;
             border: 3px solid #162043;
         }
+
         /* Chat scroll */
-        #chat-messages { scroll-behavior: smooth; }
+        #chat-messages {
+            scroll-behavior: smooth;
+        }
 
         /* Sidebar nav item active state */
         .sidebar-nav-item.active {
             background-color: #e8e2d9;
             border-left: 3px solid #b71619;
         }
-        .sidebar-nav-item { border-left: 3px solid transparent; }
+
+        .sidebar-nav-item {
+            border-left: 3px solid transparent;
+        }
 
         /* Textarea auto-resize */
-        #chat-input { resize: none; overflow-y: hidden; min-height: 44px; max-height: 160px; }
+        #chat-input {
+            resize: none;
+            overflow-y: hidden;
+            min-height: 44px;
+            max-height: 160px;
+        }
 
         /* ── Upload / Intake screen ──────────────────────────────── */
         .dropzone {
             border: 3px dashed #162043;
             transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
         }
+
         .dropzone.drag-active {
             background-color: #e8e2d9;
             border-color: #b71619;
         }
+
         .dropzone.drag-active .dropzone-icon {
             transform: scale(1.08) rotate(-4deg);
         }
-        .dropzone-icon { transition: transform 0.15s ease; }
+
+        .dropzone-icon {
+            transition: transform 0.15s ease;
+        }
 
         .file-chip {
             border: 3px solid #162043;
             background-color: #fff9ef;
         }
+
         .file-chip .remove-file {
             opacity: 0.5;
             transition: opacity 0.15s ease, color 0.15s ease;
         }
-        .file-chip:hover .remove-file { opacity: 1; }
+
+        .file-chip:hover .remove-file {
+            opacity: 1;
+        }
 
         @keyframes chipIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .file-chip { animation: chipIn 0.2s ease; }
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
 
-        #case-title-input:focus { outline: none; border-color: #b71619; }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-chip {
+            animation: chipIn 0.2s ease;
+        }
+
+        #case-title-input:focus {
+            outline: none;
+            border-color: #b71619;
+        }
     </style>
 </head>
 
@@ -158,14 +237,16 @@
     <div id="sidebar-backdrop" class="fixed inset-0 bg-primary/30 z-40 hidden opacity-0"></div>
 
     <!-- ── Sidebar ──────────────────────────────────────────────── -->
-    <nav id="sidebar" class="sidebar-closed fixed left-0 top-0 h-full flex flex-col z-50 bg-surface-container border-r-[3px] border-primary w-64">
+    <nav id="sidebar"
+        class="sidebar-closed fixed left-0 top-0 h-full flex flex-col z-50 bg-surface-container border-r-[3px] border-primary w-64">
 
         <!-- HISTORY MODE (shown on home) -->
         <div id="sidebar-history-mode" class="flex flex-col h-full">
             <div class="p-5 border-b-[3px] border-primary flex-shrink-0 flex items-center justify-between">
                 <div>
                     <h2 class="font-label-bold text-label-bold text-primary uppercase tracking-widest">Case History</h2>
-                    <p class="font-label-technical text-label-technical text-on-surface-variant mt-1" id="case-count">0 cases</p>
+                    <p class="font-label-technical text-label-technical text-on-surface-variant mt-1" id="case-count">0
+                        cases</p>
                 </div>
                 <button id="sidebar-close" class="text-primary hover:text-secondary transition-colors" title="Close">
                     <span class="material-symbols-outlined" style="font-size:20px">close</span>
@@ -174,11 +255,13 @@
             <div class="flex-grow overflow-y-auto" id="case-history-list">
                 <div id="empty-state" class="p-5 text-center mt-4">
                     <span class="material-symbols-outlined text-outline text-3xl mb-2 block">folder_open</span>
-                    <p class="font-label-technical text-label-technical text-on-surface-variant uppercase">No cases yet.<br />Click NEW CASE to begin.</p>
+                    <p class="font-label-technical text-label-technical text-on-surface-variant uppercase">No cases
+                        yet.<br />Click NEW CASE to begin.</p>
                 </div>
             </div>
             <div class="p-4 border-t-[3px] border-primary flex-shrink-0">
-                <div class="p-3 brutalist-border bg-surface-container-high text-primary font-label-technical text-label-technical">
+                <div
+                    class="p-3 brutalist-border bg-surface-container-high text-primary font-label-technical text-label-technical">
                     V. 2.0.4 &mdash; STABLE_BUILD
                 </div>
             </div>
@@ -188,25 +271,31 @@
         <div id="sidebar-case-mode" class="hidden flex-col h-full">
             <div class="p-5 border-b-[3px] border-primary flex-shrink-0 flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                    <p class="font-label-technical text-label-technical text-secondary uppercase tracking-widest">Active Case</p>
-                    <h2 class="font-label-bold text-label-bold text-primary uppercase mt-0.5 truncate" id="sidebar-case-title">—</h2>
+                    <p class="font-label-technical text-label-technical text-secondary uppercase tracking-widest">Active
+                        Case</p>
+                    <h2 class="font-label-bold text-label-bold text-primary uppercase mt-0.5 truncate"
+                        id="sidebar-case-title">—</h2>
                 </div>
-                <button id="sidebar-close-chat" class="text-primary hover:text-secondary transition-colors ml-2 flex-shrink-0" title="Close">
+                <button id="sidebar-close-chat"
+                    class="text-primary hover:text-secondary transition-colors ml-2 flex-shrink-0" title="Close">
                     <span class="material-symbols-outlined" style="font-size:20px">close</span>
                 </button>
             </div>
 
             <!-- Nav items -->
             <div class="flex-grow overflow-y-auto pt-2">
-                <button data-tab="chat" class="sidebar-nav-item active w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
+                <button data-tab="chat"
+                    class="sidebar-nav-item active w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
                     <span class="material-symbols-outlined mr-3" style="font-size:20px">chat</span>
                     <span class="font-label-bold text-label-bold uppercase">Current Chat</span>
                 </button>
-                <button data-tab="files" class="sidebar-nav-item w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
+                <button data-tab="files"
+                    class="sidebar-nav-item w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
                     <span class="material-symbols-outlined mr-3" style="font-size:20px">folder_open</span>
                     <span class="font-label-bold text-label-bold uppercase">Case Files</span>
                 </button>
-                <button data-tab="reports" class="sidebar-nav-item w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
+                <button data-tab="reports"
+                    class="sidebar-nav-item w-full flex items-center px-5 py-4 text-primary hover:bg-surface-variant transition-colors duration-75 border-b border-outline-variant">
                     <span class="material-symbols-outlined mr-3" style="font-size:20px">description</span>
                     <span class="font-label-bold text-label-bold uppercase">Reports Generated</span>
                 </button>
@@ -214,7 +303,8 @@
 
             <!-- Back to home -->
             <div class="p-4 border-t-[3px] border-primary flex-shrink-0">
-                <button id="back-to-home-btn" class="w-full flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors font-label-technical text-label-technical uppercase">
+                <button id="back-to-home-btn"
+                    class="w-full flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors font-label-technical text-label-technical uppercase">
                     <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span>
                     Back to Home
                 </button>
@@ -226,22 +316,30 @@
     <main id="main-content" class="min-h-screen flex flex-col relative overflow-hidden">
 
         <!-- Shared Header -->
-        <header class="flex justify-between items-center w-full px-10 md:px-margin-desktop py-6 bg-background border-b-[3px] border-primary z-40 flex-shrink-0">
+        <header
+            class="flex justify-between items-center w-full px-10 md:px-margin-desktop py-6 bg-background border-b-[3px] border-primary z-40 flex-shrink-0">
             <div class="flex items-center gap-4">
-                <button id="menu-toggle" class="text-primary hover:text-secondary transition-colors" title="Toggle Sidebar" aria-label="Toggle sidebar">
+                <button id="menu-toggle" class="text-primary hover:text-secondary transition-colors"
+                    title="Toggle Sidebar" aria-label="Toggle sidebar">
                     <span class="material-symbols-outlined text-3xl">menu</span>
                 </button>
-                <h1 class="font-headline-lg text-headline-lg font-bold text-primary uppercase tracking-tighter">JudyAI</h1>
+                <h1 class="font-headline-lg text-headline-lg font-bold text-primary uppercase tracking-tighter">JudyAI
+                </h1>
             </div>
             <div class="flex items-center gap-10">
                 <nav class="hidden md:flex gap-8" id="header-nav-home">
-                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase" href="#">Analysis</a>
-                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase" href="#">Precedents</a>
-                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase" href="#">Intelligence</a>
+                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase"
+                        href="#">Analysis</a>
+                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase"
+                        href="#">Precedents</a>
+                    <a class="font-label-bold text-label-bold text-on-surface hover:text-secondary uppercase"
+                        href="#">Intelligence</a>
                 </nav>
                 <!-- Case title in header (chat mode) -->
-                <span id="header-case-title" class="hidden font-label-technical text-label-technical text-on-surface-variant uppercase tracking-widest"></span>
-                <button id="new-case-header" class="bg-secondary text-on-secondary px-6 py-2 brutalist-border font-label-bold hover:bg-primary transition-colors uppercase tracking-widest">
+                <span id="header-case-title"
+                    class="hidden font-label-technical text-label-technical text-on-surface-variant uppercase tracking-widest"></span>
+                <button id="new-case-header"
+                    class="bg-secondary text-on-secondary px-6 py-2 brutalist-border font-label-bold hover:bg-primary transition-colors uppercase tracking-widest">
                     NEW CASE
                 </button>
             </div>
@@ -254,7 +352,8 @@
                 <div class="absolute top-1/2 left-0 right-0 h-[1px] grid-line hidden md:block"></div>
 
                 <div class="relative z-10 w-full mb-12">
-                    <h2 class="font-display-xl text-[7vw] md:text-display-xl leading-none text-primary uppercase border-b-[3px] border-primary pb-6 mb-6 block">
+                    <h2
+                        class="font-display-xl text-[7vw] md:text-display-xl leading-none text-primary uppercase border-b-[3px] border-primary pb-6 mb-6 block">
                         JUDYAI
                     </h2>
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
@@ -262,7 +361,8 @@
                             <p class="font-body-lg text-body-lg text-primary mb-6 leading-snug">
                                 The definitive intelligence for legal strategy and case law analysis.
                             </p>
-                            <button id="new-case-hero" class="bg-secondary text-surface px-8 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-[0.15em] transition-all hover:bg-primary">
+                            <button id="new-case-hero"
+                                class="bg-secondary text-surface px-8 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-[0.15em] transition-all hover:bg-primary">
                                 NEW CASE
                             </button>
                         </div>
@@ -275,15 +375,19 @@
                         <img class="w-full h-full object-cover grayscale contrast-125 transition-transform duration-700 group-hover:scale-110"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyqNew5-pZE4NnuWaCOtZqqI7nbV8F6PvLw4zRMbTe-1UykR7VGr8nGqqUm5aH9s89iOH0My0hz59iFzlSFRgVUiX4u-YIJL2RMQnj0LSk7EOT2ybvCfPyS63_aDDFkd5WQD72DRrPm2ry7qzYUZXKJIEn19Rxd5PBfPn1eIoeTtuYc05buKCuNzH4wcX-LZud6NyB6ITtkjnVc-B1l_tyQfv8E7ZbLuZkK-O5TMJecf3FrbsOLcxS043DAzWq28h8Ym7iAMrVi1s"
                             alt="Courthouse" />
-                        <div class="absolute inset-0 bg-primary/20 mix-blend-multiply transition-opacity group-hover:opacity-0"></div>
-                        <div class="absolute bottom-0 left-0 p-6 bg-primary text-surface font-label-bold uppercase">Structure of Law</div>
+                        <div
+                            class="absolute inset-0 bg-primary/20 mix-blend-multiply transition-opacity group-hover:opacity-0">
+                        </div>
+                        <div class="absolute bottom-0 left-0 p-6 bg-primary text-surface font-label-bold uppercase">
+                            Structure of Law</div>
                     </div>
                     <div class="md:col-span-5 flex flex-col gap-8">
                         <div class="brutalist-border p-8 bg-surface-container-low flex-grow">
                             <span class="material-symbols-outlined text-secondary text-4xl mb-4">gavel</span>
                             <h3 class="font-headline-md text-headline-md text-primary mb-4">Unmatched Precision</h3>
                             <p class="font-body-md text-body-md text-on-surface-variant">
-                                Leveraging generative models fine-tuned on centuries of jurisdictional data to provide high-fidelity strategy simulations.
+                                Leveraging generative models fine-tuned on centuries of jurisdictional data to provide
+                                high-fidelity strategy simulations.
                             </p>
                         </div>
                         <div class="brutalist-border p-8 bg-primary text-surface flex flex-col justify-between">
@@ -293,7 +397,9 @@
                             </div>
                             <div class="mt-8">
                                 <span class="font-display-xl text-5xl font-bold">99.8%</span>
-                                <span class="font-label-bold block mt-2 uppercase tracking-widest text-surface/80">Search Accuracy</span>
+                                <span
+                                    class="font-label-bold block mt-2 uppercase tracking-widest text-surface/80">Search
+                                    Accuracy</span>
                             </div>
                         </div>
                     </div>
@@ -301,15 +407,20 @@
             </section>
 
             <!-- Footer -->
-            <footer class="w-full flex flex-col md:flex-row justify-between items-center px-10 md:px-margin-desktop py-gutter bg-primary border-t-[3px] border-secondary z-40 flex-shrink-0">
+            <footer
+                class="w-full flex flex-col md:flex-row justify-between items-center px-10 md:px-margin-desktop py-gutter bg-primary border-t-[3px] border-secondary z-40 flex-shrink-0">
                 <div class="flex flex-col md:flex-row items-center gap-10">
                     <h3 class="font-headline-md text-headline-md text-surface uppercase">JUDYAI</h3>
-                    <span class="font-label-technical text-label-technical text-surface uppercase opacity-70">© 2024 JUDYAI. ALL RIGHTS RESERVED.</span>
+                    <span class="font-label-technical text-label-technical text-surface uppercase opacity-70">© 2024
+                        JUDYAI. ALL RIGHTS RESERVED.</span>
                 </div>
                 <div class="flex gap-8 mt-8 md:mt-0">
-                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase" href="#">Terms of Service</a>
-                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase" href="#">Privacy Policy</a>
-                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase" href="#">Legal Disclaimer</a>
+                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase"
+                        href="#">Terms of Service</a>
+                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase"
+                        href="#">Privacy Policy</a>
+                    <a class="font-label-technical text-surface-variant hover:text-secondary underline uppercase"
+                        href="#">Legal Disclaimer</a>
                 </div>
             </footer>
         </div>
@@ -319,38 +430,52 @@
             <div class="flex-grow overflow-y-auto px-10 md:px-margin-desktop pt-16 pb-16">
                 <div class="max-w-3xl mx-auto w-full">
 
-                    <p class="font-label-technical text-label-technical text-secondary uppercase tracking-widest mb-2">Step 1 of 1 — Case Intake</p>
-                    <h2 class="font-display-xl text-4xl md:text-display-xl leading-none text-primary uppercase border-b-[3px] border-primary pb-6 mb-8">
+                    <p class="font-label-technical text-label-technical text-secondary uppercase tracking-widest mb-2">
+                        Step 1 of 1 — Case Intake</p>
+                    <h2
+                        class="font-display-xl text-4xl md:text-display-xl leading-none text-primary uppercase border-b-[3px] border-primary pb-6 mb-8">
                         Open a New Case
                     </h2>
 
                     <!-- Case title -->
-                    <label for="case-title-input" class="font-label-bold text-label-bold text-primary uppercase tracking-widest block mb-2">Case Name</label>
+                    <label for="case-title-input"
+                        class="font-label-bold text-label-bold text-primary uppercase tracking-widest block mb-2">Case
+                        Name</label>
                     <input id="case-title-input" type="text" placeholder="e.g. Smith v. Johnson — Contract Dispute"
                         class="w-full px-4 py-3 mb-8 brutalist-border bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant" />
 
                     <!-- Dropzone -->
-                    <label class="font-label-bold text-label-bold text-primary uppercase tracking-widest block mb-2">Case Files</label>
-                    <div id="dropzone" class="dropzone p-10 flex flex-col items-center text-center gap-3 cursor-pointer bg-surface-container-low">
-                        <span class="material-symbols-outlined dropzone-icon text-secondary" style="font-size:44px">upload_file</span>
-                        <p class="font-label-bold text-label-bold text-primary uppercase">Drag &amp; drop files here, or click to browse</p>
-                        <p class="font-body-md text-body-md text-on-surface-variant">PDF, DOCX, TXT, and image files accepted</p>
+                    <label
+                        class="font-label-bold text-label-bold text-primary uppercase tracking-widest block mb-2">Case
+                        Files</label>
+                    <div id="dropzone"
+                        class="dropzone p-10 flex flex-col items-center text-center gap-3 cursor-pointer bg-surface-container-low">
+                        <span class="material-symbols-outlined dropzone-icon text-secondary"
+                            style="font-size:44px">upload_file</span>
+                        <p class="font-label-bold text-label-bold text-primary uppercase">Drag &amp; drop files here, or
+                            click to browse</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">PDF, DOCX, TXT, and image files
+                            accepted</p>
                         <input id="file-input" type="file" multiple class="hidden"
                             accept=".pdf,.doc,.docx,.txt,.rtf,.png,.jpg,.jpeg,.xls,.xlsx" />
                     </div>
 
                     <!-- File list -->
                     <div id="file-list" class="flex flex-col gap-3 mt-6"></div>
-                    <p id="file-list-empty" class="font-label-technical text-label-technical text-on-surface-variant uppercase mt-6">
+                    <p id="file-list-empty"
+                        class="font-label-technical text-label-technical text-on-surface-variant uppercase mt-6">
                         No files added yet — you can also add evidence later from Case Files.
                     </p>
 
                     <!-- Actions -->
-                    <div class="flex flex-col-reverse md:flex-row justify-between items-stretch md:items-center gap-4 mt-12 border-t-[3px] border-primary pt-8">
-                        <button id="upload-cancel" class="font-label-bold text-label-bold text-primary uppercase tracking-widest hover:text-secondary transition-colors px-2 py-3">
+                    <div
+                        class="flex flex-col-reverse md:flex-row justify-between items-stretch md:items-center gap-4 mt-12 border-t-[3px] border-primary pt-8">
+                        <button id="upload-cancel"
+                            class="font-label-bold text-label-bold text-primary uppercase tracking-widest hover:text-secondary transition-colors px-2 py-3">
                             Cancel
                         </button>
-                        <button id="upload-submit" class="bg-secondary text-surface px-8 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-[0.15em] transition-all hover:bg-primary flex items-center justify-center gap-2">
+                        <button id="upload-submit"
+                            class="bg-secondary text-surface px-8 py-3 brutalist-border brutalist-shadow brutalist-shadow-hover font-label-bold uppercase tracking-[0.15em] transition-all hover:bg-primary flex items-center justify-center gap-2">
                             Create Case &amp; Continue
                             <span class="material-symbols-outlined" style="font-size:20px">arrow_forward</span>
                         </button>
@@ -372,8 +497,10 @@
                             <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
                         </div>
                         <div class="chat-bubble-ai px-5 py-4 flex-1">
-                            <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
-                            <p class="font-body-md text-body-md">Case initialized. I am ready to assist with legal research, strategy simulation, and precedent analysis. How may I assist you?</p>
+                            <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI
+                            </p>
+                            <p class="font-body-md text-body-md">Case initialized. I am ready to assist with legal
+                                research, strategy simulation, and precedent analysis. How may I assist you?</p>
                         </div>
                     </div>
                 </div>
@@ -392,23 +519,40 @@
                             Send
                         </button>
                     </div>
-                    <p class="font-label-technical text-label-technical text-on-surface-variant text-center mt-3">JudyAI may produce inaccurate legal information. Always verify with a qualified attorney.</p>
+                    <p class="font-label-technical text-label-technical text-on-surface-variant text-center mt-3">JudyAI
+                        may produce inaccurate legal information. Always verify with a qualified attorney.</p>
                 </div>
             </div>
 
             <!-- Case Files panel -->
             <div id="tab-files" class="hidden flex-grow flex-col overflow-y-auto px-6 md:px-12 py-8">
                 <div class="max-w-3xl">
-                    <h2 class="font-headline-md text-headline-md text-primary uppercase border-b-[3px] border-primary pb-4 mb-8">Case Files</h2>
-                    <div id="case-files-uploaded" class="flex flex-col gap-3 mb-8"></div>
-                    <div id="case-files-empty" class="brutalist-border p-8 bg-surface-container-low flex flex-col items-center text-center gap-4">
-                        <span class="material-symbols-outlined text-outline text-5xl">upload_file</span>
-                        <p class="font-label-bold text-label-bold text-primary uppercase">No files uploaded yet</p>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Upload case documents, evidence, and supporting materials here.</p>
-                        <button id="case-files-upload-btn" class="mt-2 bg-primary text-surface px-6 py-2 brutalist-border font-label-bold uppercase tracking-widest hover:bg-secondary transition-colors flex items-center gap-2">
+                    <!-- Header row with always-visible Upload button -->
+                    <div class="flex items-center justify-between border-b-[3px] border-primary pb-4 mb-8">
+                        <h2 class="font-headline-md text-headline-md text-primary uppercase">Case Files</h2>
+                        <button id="case-files-upload-btn"
+                            class="bg-primary text-surface px-5 py-2 brutalist-border font-label-bold uppercase tracking-widest hover:bg-secondary transition-colors flex items-center gap-2 text-sm">
                             <span class="material-symbols-outlined" style="font-size:18px">upload</span>
                             Upload File
                         </button>
+                    </div>
+                    <!-- Upload success toast -->
+                    <div id="case-files-toast"
+                        class="hidden items-center gap-3 brutalist-border px-4 py-3 mb-6 bg-surface-container-low">
+                        <span class="material-symbols-outlined text-secondary"
+                            style="font-size:20px">check_circle</span>
+                        <span id="case-files-toast-msg"
+                            class="font-label-bold text-label-bold text-primary uppercase tracking-widest"></span>
+                    </div>
+                    <!-- File list -->
+                    <div id="case-files-uploaded" class="flex flex-col gap-3 mb-8"></div>
+                    <!-- Empty state (no button here) -->
+                    <div id="case-files-empty"
+                        class="brutalist-border p-8 bg-surface-container-low flex flex-col items-center text-center gap-4">
+                        <span class="material-symbols-outlined text-outline text-5xl">upload_file</span>
+                        <p class="font-label-bold text-label-bold text-primary uppercase">No files uploaded yet</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Click "Upload File" above to attach
+                            PDFs to this case.</p>
                     </div>
                 </div>
             </div>
@@ -416,11 +560,15 @@
             <!-- Reports Generated panel -->
             <div id="tab-reports" class="hidden flex-grow flex-col overflow-y-auto px-6 md:px-12 py-8">
                 <div class="max-w-3xl">
-                    <h2 class="font-headline-md text-headline-md text-primary uppercase border-b-[3px] border-primary pb-4 mb-8">Reports Generated</h2>
-                    <div class="brutalist-border p-8 bg-surface-container-low flex flex-col items-center text-center gap-4">
+                    <h2
+                        class="font-headline-md text-headline-md text-primary uppercase border-b-[3px] border-primary pb-4 mb-8">
+                        Reports Generated</h2>
+                    <div
+                        class="brutalist-border p-8 bg-surface-container-low flex flex-col items-center text-center gap-4">
                         <span class="material-symbols-outlined text-outline text-5xl">description</span>
                         <p class="font-label-bold text-label-bold text-primary uppercase">No reports yet</p>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Reports generated during your case analysis will appear here.</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Reports generated during your case
+                            analysis will appear here.</p>
                     </div>
                 </div>
             </div>
@@ -438,14 +586,14 @@
         });
 
         // ── State ───────────────────────────────────────────────────────
-        let currentView   = 'home';   // 'home' | 'upload' | 'chat'
-        let activeCase     = null;    // current case object
-        let activeTab      = 'chat';  // 'chat' | 'files' | 'reports'
-        let pendingFiles   = [];      // files staged on the intake screen: {id, name, size, type, file}
+        let currentView = 'home';   // 'home' | 'upload' | 'chat'
+        let activeCase = null;    // current case object
+        let activeTab = 'chat';  // 'chat' | 'files' | 'reports'
+        let pendingFiles = [];      // files staged on the intake screen: {id, name, size, type, file}
         const API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:5000' : window.location.origin;
 
         // ── Sidebar ─────────────────────────────────────────────────────
-        const sidebar  = document.getElementById('sidebar');
+        const sidebar = document.getElementById('sidebar');
         const backdrop = document.getElementById('sidebar-backdrop');
 
         function openSidebar() {
@@ -467,7 +615,7 @@
         // Switch sidebar between history-mode and case-mode
         function setSidebarMode(mode) {
             const historyMode = document.getElementById('sidebar-history-mode');
-            const caseMode    = document.getElementById('sidebar-case-mode');
+            const caseMode = document.getElementById('sidebar-case-mode');
             if (mode === 'history') {
                 historyMode.classList.remove('hidden');
                 historyMode.classList.add('flex');
@@ -488,9 +636,9 @@
             document.getElementById('view-upload').classList.toggle('active', view === 'upload');
             document.getElementById('view-chat').classList.toggle('active', view === 'chat');
 
-            const headerNav   = document.getElementById('header-nav-home');
+            const headerNav = document.getElementById('header-nav-home');
             const headerTitle = document.getElementById('header-case-title');
-            const newCaseBtn  = document.getElementById('new-case-header');
+            const newCaseBtn = document.getElementById('new-case-header');
 
             if (view === 'chat') {
                 setSidebarMode('case');
@@ -556,9 +704,9 @@
         }
         function statusBadge(status) {
             const map = {
-                active:  { bg: 'bg-secondary', text: 'text-white' },
+                active: { bg: 'bg-secondary', text: 'text-white' },
                 pending: { bg: 'bg-surface-container-high', text: 'text-primary' },
-                closed:  { bg: 'bg-primary', text: 'text-surface' },
+                closed: { bg: 'bg-primary', text: 'text-surface' },
             };
             const s = map[status] || map.pending;
             return `<span class="${s.bg} ${s.text} font-label-technical text-[10px] uppercase px-1.5 py-0.5 tracking-widest">${status}</span>`;
@@ -578,13 +726,14 @@
                         <p class="font-body-md text-body-md">Case <strong>${c.title}</strong> initialized. I am ready to assist with legal research, strategy simulation, and precedent analysis. How may I assist you?</p>
                     </div>
                 </div>`;
-            localStorage.setItem('judyai_active_case', JSON.stringify(c));
-            window.location.href = 'chat.html';
+            renderActiveCaseFiles();
+            showView('chat');
+            switchTab('chat');
         }
 
         function renderCases() {
             const cases = loadCases();
-            const list  = document.getElementById('case-history-list');
+            const list = document.getElementById('case-history-list');
             const empty = document.getElementById('empty-state');
             const count = document.getElementById('case-count');
 
@@ -630,10 +779,10 @@
         }
 
         // ── New Case Intake / Upload screen ──────────────────────────────
-        const dropzone       = document.getElementById('dropzone');
-        const fileInput      = document.getElementById('file-input');
-        const fileListEl     = document.getElementById('file-list');
-        const fileListEmpty  = document.getElementById('file-list-empty');
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file-input');
+        const fileListEl = document.getElementById('file-list');
+        const fileListEmpty = document.getElementById('file-list-empty');
         const caseTitleInput = document.getElementById('case-title-input');
 
         function bytesToSize(bytes) {
@@ -687,7 +836,7 @@
             [...fileArray].forEach(f => {
                 if ((f.type && f.type !== 'application/pdf') || !f.name.toLowerCase().endsWith('.pdf')) return;
                 pendingFiles.push({
-                    id:   `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                    id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
                     name: f.name,
                     size: f.size,
                     type: f.type,
@@ -746,7 +895,7 @@
             const submitBtn = document.getElementById('upload-submit');
             const original = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Scanning PDFs &amp; Building RAG...';
+            submitBtn.innerHTML = 'Scanning PDFs & Building RAG…';
 
             try {
                 const form = new FormData();
@@ -768,8 +917,36 @@
                 cases.push(newCase);
                 saveCases(cases);
                 renderCases();
-                localStorage.setItem('judyai_active_case', JSON.stringify(newCase));
-                window.location.href = 'chat.html';
+                activeCase = newCase;
+                renderActiveCaseFiles();
+
+                // Populate reports tab if analysis is available
+                if (newCase.analysis && newCase.analysis.summary) {
+                    const reportsTab = document.getElementById('tab-reports').querySelector('.max-w-3xl');
+                    reportsTab.innerHTML = `
+                        <h2 class="font-headline-md text-headline-md text-primary uppercase border-b-[3px] border-primary pb-4 mb-8">Reports Generated</h2>
+                        <div class="brutalist-border p-8 bg-surface-container-low font-body-md text-body-md text-on-surface prose max-w-none overflow-y-auto max-h-[70vh]">
+                            ${newCase.analysis.summary.replace(/\n/g, '<br>')}
+                        </div>
+                    `;
+                }
+
+                // Reset chat welcome message
+                const msgs = document.getElementById('chat-messages');
+                msgs.innerHTML = `
+                    <div class="flex items-start gap-4 max-w-3xl">
+                        <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
+                            <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
+                        </div>
+                        <div class="chat-bubble-ai px-5 py-4 flex-1">
+                            <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
+                            <p class="font-body-md text-body-md">Case <strong>${newCase.title}</strong> initialized. I am ready to assist with legal research, strategy simulation, and precedent analysis. How may I assist you?</p>
+                        </div>
+                    </div>`;
+
+                // Always switch to the chat workspace after a successful upload
+                showView('chat');
+                switchTab('chat');
             } catch (err) {
                 alert(err.message || 'Could not create the case.');
                 submitBtn.disabled = false;
@@ -782,15 +959,75 @@
         document.getElementById('new-case-hero').addEventListener('click', openUploadView);
 
         // Shortcut from the Case Files tab inside an active chat
+        // Use a dedicated hidden input so we don't reuse the intake-screen one
         const caseFilesUploadBtn = document.getElementById('case-files-upload-btn');
+        const caseFilesInput = document.createElement('input');
+        caseFilesInput.type = 'file';
+        caseFilesInput.multiple = true;
+        caseFilesInput.accept = '.pdf';
+        caseFilesInput.classList.add('hidden');
+        document.body.appendChild(caseFilesInput);
+
+        function showFilesTabToast(msg, durationMs = 3500) {
+            const toast = document.getElementById('case-files-toast');
+            const label = document.getElementById('case-files-toast-msg');
+            if (!toast || !label) return;
+            label.textContent = msg;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, durationMs);
+        }
+
+        caseFilesInput.addEventListener('change', async (e) => {
+            const selectedFiles = [...e.target.files].filter(f => f.name.toLowerCase().endsWith('.pdf'));
+            caseFilesInput.value = '';
+            if (!selectedFiles.length) return;
+            if (!activeCase) {
+                alert('No active case. Please open a case first.');
+                return;
+            }
+
+            caseFilesUploadBtn.disabled = true;
+            caseFilesUploadBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size:18px">sync</span> Uploading…';
+
+            try {
+                const form = new FormData();
+                form.append('title', activeCase.title);
+                selectedFiles.forEach(f => form.append('files', f, f.name));
+                const res = await fetch(`${API_BASE}/api/cases`, { method: 'POST', body: form });
+                const payload = await res.json();
+                if (!res.ok) throw new Error(payload.error || 'Upload failed.');
+
+                // Merge new files into the active case record
+                const addedFiles = payload.files || [];
+                activeCase.files = [...(activeCase.files || []), ...addedFiles];
+                const cases = loadCases().map(c => c.id === activeCase.id ? activeCase : c);
+                saveCases(cases);
+                renderActiveCaseFiles();
+                renderCases();
+
+                const names = addedFiles.map(f => f.name).join(', ');
+                showFilesTabToast(`✓ ${addedFiles.length} file${addedFiles.length !== 1 ? 's' : ''} added — ${names}`);
+            } catch (err) {
+                alert(err.message || 'Could not upload the file.');
+            } finally {
+                caseFilesUploadBtn.disabled = false;
+                caseFilesUploadBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">upload</span> Upload File';
+            }
+        });
+
         if (caseFilesUploadBtn) {
-            caseFilesUploadBtn.addEventListener('click', () => fileInput && fileInput.click());
+            caseFilesUploadBtn.addEventListener('click', () => caseFilesInput.click());
         }
 
         // ── Chat Send Logic ──────────────────────────────────────────────
         const chatInput = document.getElementById('chat-input');
-        const chatSend  = document.getElementById('chat-send');
-        const chatMsgs  = document.getElementById('chat-messages');
+        const chatSend = document.getElementById('chat-send');
+        const chatMsgs = document.getElementById('chat-messages');
 
         // Auto-resize textarea
         chatInput.addEventListener('input', () => {
@@ -815,6 +1052,10 @@
         function sendMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
+            if (!activeCase) {
+                alert('No active case loaded.');
+                return;
+            }
 
             // User bubble
             const userBubble = document.createElement('div');
@@ -824,13 +1065,16 @@
                     <span class="material-symbols-outlined text-white" style="font-size:16px">person</span>
                 </div>
                 <div class="chat-bubble-user px-5 py-4 flex-1">
-                    <p class="font-body-md text-body-md">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+                    <p class="font-body-md text-body-md">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
                 </div>`;
             chatMsgs.appendChild(userBubble);
 
             chatInput.value = '';
             chatInput.style.height = 'auto';
             chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
+            // Disable send while waiting
+            chatSend.disabled = true;
 
             // Typing indicator
             const typing = document.createElement('div');
@@ -845,24 +1089,65 @@
             chatMsgs.appendChild(typing);
             chatMsgs.scrollTop = chatMsgs.scrollHeight;
 
-            // Simulated AI response
-            setTimeout(() => {
+            // Call the real backend API
+            fetch(`${API_BASE}/api/cases/${activeCase.id}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text }),
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Chat request failed.');
+                return data;
+            })
+            .then(data => {
                 typing.remove();
+                const answer = (data.answer || 'No response received.')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
                 const aiBubble = document.createElement('div');
                 aiBubble.className = 'flex items-start gap-4 max-w-3xl';
-                const response = aiResponses[aiIndex % aiResponses.length];
-                aiIndex++;
                 aiBubble.innerHTML = `
                     <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
                         <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
                     </div>
                     <div class="chat-bubble-ai px-5 py-4 flex-1">
                         <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
-                        <p class="font-body-md text-body-md">${response}</p>
+                        <div class="font-body-md text-body-md">${answer}</div>
+                        ${data.citations && data.citations.length ? `
+                        <div class="mt-3 pt-3 border-t border-outline-variant">
+                            <p class="font-label-technical text-label-technical text-on-surface-variant uppercase mb-1">Sources</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${data.citations.slice(0, 6).map(c =>
+                                    `<span class="font-label-technical text-label-technical bg-surface-container px-2 py-1 text-on-surface-variant">${c.file} p.${c.page}</span>`
+                                ).join('')}
+                            </div>
+                        </div>` : ''}
                     </div>`;
                 chatMsgs.appendChild(aiBubble);
                 chatMsgs.scrollTop = chatMsgs.scrollHeight;
-            }, 1200);
+            })
+            .catch(err => {
+                typing.remove();
+                const errBubble = document.createElement('div');
+                errBubble.className = 'flex items-start gap-4 max-w-3xl';
+                errBubble.innerHTML = `
+                    <div class="flex-shrink-0 w-8 h-8 bg-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-surface" style="font-size:16px">gavel</span>
+                    </div>
+                    <div class="chat-bubble-ai px-5 py-4 flex-1">
+                        <p class="font-label-technical text-label-technical text-secondary uppercase mb-1">JudyAI</p>
+                        <p class="font-body-md text-body-md text-error">Error: ${err.message}</p>
+                    </div>`;
+                chatMsgs.appendChild(errBubble);
+                chatMsgs.scrollTop = chatMsgs.scrollHeight;
+            })
+            .finally(() => {
+                chatSend.disabled = false;
+            });
         }
 
         // ── Case Files tab: reflect files saved on the active case ───────
@@ -890,4 +1175,5 @@
         renderActiveCaseFiles();
     </script>
 </body>
+
 </html>

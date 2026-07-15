@@ -8,26 +8,34 @@ import uuid
 from collections import Counter
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlencode, urlparse
+from groq import Groq
+from dotenv import load_dotenv
+
+load_dotenv()
 
 LOCAL_LIBS = Path(__file__).resolve().parent / ".pythonlibs"
 if LOCAL_LIBS.exists():
     sys.path.insert(0, str(LOCAL_LIBS))
 
 import requests
+# pyrefly: ignore [missing-import]
 from flask import Flask, jsonify, request, send_from_directory
+# pyrefly: ignore [missing-import]
 from werkzeug.utils import secure_filename
 
 try:
+    # pyrefly: ignore [missing-import]
     from pypdf import PdfReader
 except Exception:  # pragma: no cover - fallback for older installs
     try:
+         # pyrefly: ignore [missing-import]
         from PyPDF2 import PdfReader
     except Exception:
         PdfReader = None
 
 
 ROOT = Path(__file__).resolve().parent
-FRONTEND_DIR = ROOT / "JudyAI-main"
+FRONTEND_DIR = ROOT
 DATA_DIR = ROOT / "data" / "cases"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -450,25 +458,43 @@ def health():
 @app.route("/api/cases", methods=["POST"])
 def create_case():
     title = clean_text(request.form.get("title") or "")
-    files = request.files.getlist("files")
-    if not files:
-        return jsonify({"error": "Upload at least one PDF file."}), 400
+    raw_files = request.files.getlist("files")
+    
+    # 1. Filter out empty file attachments sent by browsers
+    valid_files = [f for f in raw_files if f and f.filename.strip() != ""]
+    
+    if not valid_files:
+        return jsonify({"error": "Upload at least one valid PDF file."}), 400
+
+    # 2. Safely compute the fallback title from the first valid file
     if not title:
-        title = clean_text(Path(files[0].filename or "Untitled Case").stem.replace("_", " ").replace("-", " "))
+        first_file_name = Path(valid_files[0].filename).stem
+        title = clean_text(first_file_name.replace("_", " ").replace("-", " "))
+        if not title:
+            title = f"Case Study {int(time.time())}" # Strict ultimate fallback
 
     case_id = uuid.uuid4().hex
     directory = case_dir(case_id)
     stored_files = []
     chunks = []
-    for upload in files:
+    
+    for upload in valid_files:
         if not upload.filename.lower().endswith(".pdf"):
-            return jsonify({"error": f"{upload.filename} is not a PDF."}), 400
-        safe_name = secure_filename(upload.filename) or f"{uuid.uuid4().hex}.pdf"
+            return jsonify({"error": f"{upload.filename} is not a PDF file."}), 400
+            
+        # 3. Ensure secure_filename has a concrete string fallback if parsing goes awry
+        safe_name = secure_filename(upload.filename)
+        if not safe_name or safe_name in [".pdf", ""]:
+            safe_name = f"document_{uuid.uuid4().hex[:8]}.pdf"
+            
         destination = directory / "files" / safe_name
         upload.save(destination)
+        
+        # Extract and parse content
         pages = extract_pdf_text(destination)
         file_chunks = chunk_pages(safe_name, pages)
         chunks.extend(file_chunks)
+        
         stored_files.append(
             {
                 "name": safe_name,
@@ -487,8 +513,11 @@ def create_case():
         "chunks": chunks,
         "analysis": None,
     }
+    
+    # Process RAG generation
     case["analysis"] = analyze_case(case)
     write_case(case)
+    
     public_case = {k: v for k, v in case.items() if k != "chunks"}
     return jsonify(public_case), 201
 

@@ -1,0 +1,61 @@
+{
+  "id": "0bdc5efb17b847ab8580d14f2fb27289",
+  "title": "Athera AI Summit Chief Guest Agenda",
+  "status": "active",
+  "date": 1784104210,
+  "files": [
+    {
+      "name": "Athera_AI_Summit_Chief_Guest_Agenda.pdf",
+      "size": 233889,
+      "pages": 2,
+      "chunks": 2
+    }
+  ],
+  "chunks": [
+    {
+      "id": "Athera_AI_Summit_Chief_Guest_Agenda.pdf:p1:0",
+      "file": "Athera_AI_Summit_Chief_Guest_Agenda.pdf",
+      "page": 1,
+      "text": "ATHERA AI SUMMIT Chief Guest Agenda Full Day Schedule Time Duration Segment 8:00 – 8:30 AM 30 min Inauguration 8:30 – 8:45 AM 15 min Chief Guest arrival (attendees assemble at venues) 8:45 – 9:00 AM 15 min Seating / settle buffer 9:00 – 9:45 AM 45 min Chief Guest addressing 9:45 AM – 1:05 PM 3h 15m AI Summit — Panel Discussion Block (5 topics × 40 min) 1:05 – 1:20 PM 15 min Prep for closing 1:20 – 2:05 PM 45 min Closing / Valedictory Note: At 40 min per topic × 5 topics, the panel block runs 9:45 AM – 1:00 PM. Closing has been shifted accordingly to keep the day intact. Panel Block Timestamps Time Topic 9:45 – 10:25 AM Topic 1 — State of AI: From Research Labs to Real-World Deployment 10:25 – 11:05 AM Topic 2 — Building AI Products for the Indian Market 11:05 – 11:45 AM Topic 3 — Applied AI in Industry: A Case Study 11:45 AM – 12:25 PM Topic 4 — From Idea to Startup: Funding, GTM, Scaling 12:25 – 1:05 PM Topic 5 — The Future of AI: Responsible Building & What Comes Next Topic Details 1. State of AI: From Research Labs to Real-World Deployment Current model landscape, what's hype vs. production-ready, where the frontier actually is. Good opening topic to set shared context for the audience. 2. Building AI Products for the Indian Market: What Works, What Doesn't Localization challenges, cost-of-inference constraints, Tier 2/3 user behavior, pricing for the Indian market — practical for students building their own products. 3. Applied AI in Industry: A Case Study from [Embedded/Vision/Enterprise]"
+    },
+    {
+      "id": "Athera_AI_Summit_Chief_Guest_Agenda.pdf:p2:0",
+      "file": "Athera_AI_Summit_Chief_Guest_Agenda.pdf",
+      "page": 2,
+      "text": "Deep technical dive into one real deployed system (model choices, constraints, failure modes) — showing AI beyond chatbots (e.g., computer vision, edge AI). 4. From Idea to Startup: Funding, GTM, and Scaling an AI Venture in India VC/angel landscape for AI startups in India, go-to-market lessons, hiring for AI teams, what investors actually look for right now. 5. The Future of AI: Responsible Building & What Comes Next Ethics/responsible AI, agentic systems, what founders and engineers alike should be watching for in the next 1–2 years. Leaves the audience with a forward-looking note. Per-Topic Internal Split 40 min = 30 min discussion + 10 min Q&A. Repeats identically for all 5 topics. Segment Duration What Happens Moderator opens topic 2 min Brief framing of why this topic matters CG 1 turn ~5–6 min “[CG1 Name] sir/mam, what are your thoughts on [topic]?” CG 2 turn ~5–6 min “[CG2 Name] sir/mam, what's your take?” CG 3 turn ~5–6 min “[CG3 Name] sir/mam, what are your thoughts on this?” CG 4 turn ~5–6 min “[CG4 Name] sir/mam, what would you add?” CG 5 turn ~5–6 min “[CG5 Name] sir/mam, what are your thoughts on this?” Moderator synthesis ~2 min Quick wrap-up connecting the 5 viewpoints Audience Q&A 10 min Moderator picks 2–3 questions, directs to relevant chief guest Total: 30 min discussion + 10 min Q&A = 40 min"
+    }
+  ],
+  "analysis": {
+    "summary": "## Executive Summary\n\nGroq is not configured. This is a local PDF-first brief for **Athera AI Summit Chief Guest Agenda**. Add `GROQ_API_KEY` to `.env` and restart for full AI analysis.\n\n## Key Statutory Sections & Case Law\n\nThe local fallback cannot infer statutory sections reliably beyond what appears in the uploaded PDFs. Inspect the cited excerpts below for section references.\n\n## Legal Web Leads\n\n- No legal web leads found: The PDF analysis is still available, but the public legal search did not return usable results for this query.\n\n## Contradictions & Inconsistencies\n\nFull contradiction detection requires Groq. Excerpts for manual review:\n\n- Athera_AI_Summit_Chief_Guest_Agenda.pdf p.1: ATHERA AI SUMMIT Chief Guest Agenda Full Day Schedule Time Duration Segment 8:00 – 8:30 AM 30 min Inauguration 8:30 – 8:45 AM 15 min Chief Guest arrival (attendees assemble at venues) 8:45 – 9:00 AM 15 min Seating / settle buffer 9:00 –...\n- Athera_AI_Summit_Chief_Guest_Agenda.pdf p.2: Deep technical dive into one real deployed system (model choices, constraints, failure modes) — showing AI beyond chatbots (e.g., computer vision, edge AI). 4. From Idea to Startup: Funding, GTM, and Scaling an AI Venture in India VC/angel landscape for AI startups in India,...\n\n## Missing Facts & Evidence Gaps\n\n1. Which facts are disputed by the opposing party?\n2. Which PDF pages contain the strongest evidence?\n3. Are there timeline discrepancies between witness statements?\n\n## Strategic Insights & Next Steps\n\n1. Verify statutory provisions against primary sources (indiacode.nic.in).\n2. Cross-reference cited judgments on the Supreme Court portal (sci.gov.in).\n3. Prepare a discovery strategy targeting the evidentiary gaps identified above.",
+    "groq_configured": false,
+    "legal_leads": [
+      {
+        "title": "No legal web leads found",
+        "snippet": "The PDF analysis is still available, but the public legal search did not return usable results for this query.",
+        "url": "",
+        "unavailable": true
+      }
+    ],
+    "indian_kanoon": [
+      {
+        "title": "No legal web leads found",
+        "snippet": "The PDF analysis is still available, but the public legal search did not return usable results for this query.",
+        "url": "",
+        "unavailable": true
+      }
+    ],
+    "citations": [
+      {
+        "file": "Athera_AI_Summit_Chief_Guest_Agenda.pdf",
+        "page": 1,
+        "id": "Athera_AI_Summit_Chief_Guest_Agenda.pdf:p1:0"
+      },
+      {
+        "file": "Athera_AI_Summit_Chief_Guest_Agenda.pdf",
+        "page": 2,
+        "id": "Athera_AI_Summit_Chief_Guest_Agenda.pdf:p2:0"
+      }
+    ],
+    "generated_at": 1784104211
+  }
+}
